@@ -1,0 +1,20 @@
+{
+  "name": "killrvideo-nodejs",
+  "version": "0.0.0",
+  "description": "Reference application for using Cassandra, DataStax Enterprise, and NodeJS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/KillrVideo/killrvideo-nodejs.git"
+  },
+  "author": "Luke Tillman <luke@luketillman.com> (http://www.luketillman.com)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/KillrVideo/killrvideo-nodejs/issues"
+  },
+  "homepage": "https://killrvideo.github.io",
+  "private": true
+}
