@@ -11,3 +11,6 @@ node_modules
 
 # Build and package output
 /dist
+
+# Docker .env settings
+.env
