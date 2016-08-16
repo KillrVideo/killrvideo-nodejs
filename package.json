@@ -2,13 +2,15 @@
   "name": "killrvideo-nodejs",
   "version": "0.0.0",
   "description": "Reference application for using Cassandra, DataStax Enterprise, and NodeJS",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "start": "node dist/index.js",
     "clean": "rimraf dist",
     "build": "npm-run-all --parallel \"build:*\"",
     "build:js": "babel src --out-dir dist --source-maps",
     "build:protos": "cpx \"lib/killrvideo-service-protos/src/**/*\" dist/protos --verbose",
-    "build:googleprotos": "cpx \"lib/google/**\" dist/protos/google --verbose"
+    "build:googleprotos": "cpx \"lib/google/**\" dist/protos/google --verbose",
+    "watch": "npm-run-all clean --parallel \"build:* -- --watch\""
   },
   "repository": {
     "type": "git",
