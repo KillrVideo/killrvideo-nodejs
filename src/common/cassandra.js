@@ -35,5 +35,4 @@ export function getCassandraClient() {
  * method in this module. Returns a Promise.
  */
 export function initCassandraAsync() {
-  
 };
