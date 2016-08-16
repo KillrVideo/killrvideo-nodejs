@@ -10,6 +10,7 @@
     "build:js": "babel src --out-dir dist --source-maps",
     "build:protos": "cpx \"lib/killrvideo-service-protos/src/**/*\" dist/protos --verbose",
     "build:googleprotos": "cpx \"lib/google/**\" dist/protos/google --verbose",
+    "build:data": "cpx \"lib/killrvideo-data/*.cql\" dist/data",
     "watch": "npm-run-all clean --parallel \"build:* -- --watch\""
   },
   "repository": {
