@@ -1,3 +1,5 @@
+import { logger } from './logging';
+
 /**
  * Do a promise returning function with retries.
  */
@@ -19,8 +21,8 @@ export function withRetries(promiseFn, maxRetries, delaySeconds, errMsg, expBack
       // Log, delay, and try again
       retryCount++;
       
-      console.debug(err);
-      console.log(`${errMsg}. Retry ${retryCount} in ${delayMs}ms.`)
+      logger.log('debug', '', err);
+      logger.log('verbose', `${errMsg}. Retry ${retryCount} in ${delayMs}ms.`);
       return Promise.delay(delayMs).then(doIt);
     });
   }

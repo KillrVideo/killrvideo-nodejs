@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import Etcd from 'node-etcd';
+import { logger } from './logging';
 
 // Reuse a singleton instance of the etcd client for all operations
 let etcdClient = null;
@@ -32,5 +33,8 @@ export function lookupServiceAsync(serviceName) {
     })
     .then(response => {
       return response.node.nodes.map(node => node.value);
+    })
+    .tap(values => {
+      logger.log('debug', `Found service ${serviceName} at ${JSON.stringify(values)}`);
     });
 };

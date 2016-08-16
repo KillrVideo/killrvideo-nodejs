@@ -5,6 +5,7 @@ import Promise from 'bluebird';
 import { Client, types as CassandraTypes } from 'cassandra-driver';
 import { lookupServiceAsync } from './service-discovery';
 import { withRetries } from './with-retries';
+import { logger } from './logging';
 
 // The schema.cql file is copied under the data folder as part of the build scripts (see
 // the package.json file for the script command)
@@ -86,6 +87,8 @@ export function getCassandraClient() {
  * method in this module. Returns a Promise.
  */
 export function initCassandraAsync() {
+  logger.log('info', 'Initializing cassandra');
+
   // Create the keyspace, then a client connected to the keyspace
   let createClient = createClientAsync()
     .tap(client => {
@@ -109,10 +112,11 @@ export function initCassandraAsync() {
 
   // Once we have keyspace, client for keyspace, and schema contents...
   return Promise.join(createClient, readSchema, (client, schemaStatements) => {
-    // Save client instance for reuse everywhere
-    clientInstance = client;
+      // Save client instance for reuse everywhere
+      clientInstance = client;
 
-    // Execute the statements in order, waiting for each one to complete before doing the next one
-    return Promise.mapSeries(schemaStatements, statement => client.executeAsync(statement));
-  });
+      // Execute the statements in order, waiting for each one to complete before doing the next one
+      return Promise.mapSeries(schemaStatements, statement => client.executeAsync(statement));
+    })
+    .tap(() => logger.log('info', 'Cassandra initialized'));
 };
