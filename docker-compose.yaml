@@ -1,0 +1,24 @@
+version: '2'
+
+# Other services are specified in .\lib\killrvideo-docker-common\docker-compose.yaml
+services:
+  # Start the KillrVideo web UI on port 3000
+  web:
+    image: killrvideo/killrvideo-web:1.1.2
+    ports:
+    - "3000:3000"
+    depends_on:
+    - dse
+    - etcd
+    environment:
+      SERVICE_3000_NAME: web
+      KILLRVIDEO_ETCD: "etcd:2379"
+
+  # The sample data generator
+  generator:
+    image: killrvideo/killrvideo-generator:1.1.1
+    depends_on:
+    - dse
+    - etcd
+    environment:
+      KILLRVIDEO_ETCD: "etcd:2379"
