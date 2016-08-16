@@ -16,5 +16,8 @@
     "url": "https://github.com/KillrVideo/killrvideo-nodejs/issues"
   },
   "homepage": "https://killrvideo.github.io",
-  "private": true
+  "private": true,
+  "dependencies": {
+    "grpc": "^1.0.0-pre2"
+  }
 }
