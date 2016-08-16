@@ -1,8 +1,14 @@
 import { resolve } from 'path';
+import process from 'process';
 import dotenv from 'dotenv';
+import Promise from 'bluebird';
 import { initCassandraAsync } from './common/cassandra';
 import { logger, setLoggingLevel } from './common/logging';
-import { createServer } from './grpc/server';
+import { GrpcServer } from './grpc/server';
+import { services } from './services';
+
+// Allow bluebird promise cancellation
+Promise.config({ cancellation: true });
 
 // Load environment variables from docker's .env file
 dotenv.config({ path: resolve(__dirname, '../.env') });
@@ -21,8 +27,11 @@ function startAsync() {
   return initCassandraAsync()
     .then(() => {
       // Start the Grpc server
-      let server = createServer();
+      logger.log('info', 'Starting all Grpc services');
+      let server = new GrpcServer(services);
       server.start();
+      logger.log('info', 'KillrVideo has started. Press Ctrl+C to exit.');
+      return server;
     })
     .catch(err => {
       // Use console to log error since logger might write asynchronously
@@ -33,7 +42,24 @@ function startAsync() {
 
 let startPromise = startAsync();
 
+function stop() {
+  logger.log('info', 'Attempting to shutdown');
+  if (startPromise.isFulfilled()) {
+    let server = startPromise.value();
+    server.stopAsync().then(() => process.exit(0));
+  } else {
+    startPromise.cancel();
+    process.exit(0);
+  }
+}
 
-
-
-
+// Listen for Ctrl+C to exit
+let stdin = process.stdin;
+stdin.setRawMode(true);
+stdin.resume();
+stdin.setEncoding('utf8');
+stdin.on('data', key => {
+  if (key === '\u0003') {
+    stop();
+  }
+});
