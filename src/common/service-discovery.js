@@ -38,3 +38,31 @@ export function lookupServiceAsync(serviceName) {
       logger.log('debug', `Found service ${serviceName} at ${JSON.stringify(values)}`);
     });
 };
+
+/**
+ * Registers a service at the host and port specified.
+ */
+export function registerServiceAsync(serviceName, uniqueId, hostAndPort) {
+  let key = `/killrvideo/services/${serviceName}/${uniqueId}`;
+  return Promise.try(getEtcdClient)
+    .then(client => {
+      return client.setAsync(key, hostAndPort);
+    })
+    .tap(() => {
+      logger.log('debug', `Registered service ${serviceName}, instance ${uniqueId} at ${hostAndPort}`);
+    });
+};
+
+/**
+ * Removes a service from the registry.
+ */
+export function removeServiceAsync(serviceName, uniqueId) {
+  let key = `/killrvideo/services/${serviceName}/${uniqueId}`;
+  return Promise.try(getEtcdClient)
+    .then(client => {
+      return client.delAsync(key);
+    })
+    .tap(() => {
+      logger.log('debug', `Removed service ${serviceName}, instance ${uniqueId}`);
+    });
+};

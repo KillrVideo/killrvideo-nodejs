@@ -1,8 +1,13 @@
 import { logServices } from './log-services';
+import { register, remove } from './register-with-service-discovery';
 
 /**
- * Registers all event listeners with a GrpcServer instance.
+ * An array of all listener registration functions that want to subscribe to Grpc server events.
  */
-export function registerListeners(grpcServer) {
-  grpcServer.on('start', logServices);
-};
+export const listeners = [
+  logServices,
+  register,
+  remove
+];
+
+export default listeners;

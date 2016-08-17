@@ -57,11 +57,12 @@ export class GrpcServer extends EventEmitter {
     return this._stopAsync()
       .then(() => {
         this._emitEvent('stop');
+        return null;  // In case any listeners are creating promises, return null to prevent bluebird warning
       })
       .finally(() => logger.log('debug', 'Stopped Grpc server'));
   }
 
   _emitEvent(eventName) {
-    this.emit(eventName, { hostAndPort, services: this._services.map(s => s.service) });
+    this.emit(eventName, hostAndPort, this._services.map(s => s.service));
   }
 };

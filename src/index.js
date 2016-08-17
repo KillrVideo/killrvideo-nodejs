@@ -6,7 +6,7 @@ import { initCassandraAsync } from './common/cassandra';
 import { logger, setLoggingLevel } from './common/logging';
 import { GrpcServer } from './grpc/server';
 import { services } from './services';
-import { registerListeners } from './server-listeners';
+import { listeners } from './server-listeners';
 
 // Allow bluebird promise cancellation
 Promise.config({ cancellation: true });
@@ -27,10 +27,12 @@ function startAsync() {
   // Start by initializing cassandra
   return initCassandraAsync()
     .then(() => {
-      // Start the Grpc server
+      // Create a Grpc server and register all listeners
       logger.log('info', 'Starting all Grpc services');
       let server = new GrpcServer(services);
-      registerListeners(server);
+      listeners.forEach(listener => listener(server));
+
+      // Start the server and return it
       server.start();
       logger.log('info', 'KillrVideo has started. Press Ctrl+C to exit.');
       return server;
