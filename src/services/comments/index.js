@@ -5,6 +5,10 @@ const file = 'comments/comments_service.proto';
 const proto = load(file);
 const { service } = proto.killrvideo.comments.CommentsService;
 
+// Load events published by this service
+const eventsFile = 'comments/comments_events.proto';
+const { UserCommentedOnVideo } = load(eventsFile).killrvideo.comments.events;
+
 /**
  * The comments service implementation.
  */

@@ -5,6 +5,14 @@ const file = 'video-catalog/video_catalog_service.proto';
 const proto = load(file);
 const { service } = proto.killrvideo.video_catalog.VideoCatalogService;
 
+// Load events published by this service
+const eventsFile = 'video-catalog/video_catalog_events.proto';
+const { 
+  UploadedVideoAccepted,
+  UploadedVideoAdded,
+  YouTubeVideoAdded 
+} = load(eventsFile).killrvideo.video_catalog.events;
+
 /**
  * The video catalog service implementation.
  */
