@@ -29,6 +29,7 @@
     "cassandra-driver": "^3.1.1",
     "dotenv": "^2.0.0",
     "grpc": "^1.0.0-pre2",
+    "moment": "^2.14.1",
     "node-etcd": "^5.0.3",
     "winston": "^2.2.0"
   },

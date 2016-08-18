@@ -1,17 +1,11 @@
-import { load } from '../common/load';
+import { logger } from '../../common/logging';
+import { VideoCatalogService } from './protos';
+import { getLatestVideoPreviewsAsync } from './get-latest-video-previews';
 
-// Load the protobuf definition to get the service object
-const file = 'video-catalog/video_catalog_service.proto';
-const proto = load(file);
-const { service } = proto.killrvideo.video_catalog.VideoCatalogService;
-
-// Load events published by this service
-const eventsFile = 'video-catalog/video_catalog_events.proto';
-const { 
-  UploadedVideoAccepted,
-  UploadedVideoAdded,
-  YouTubeVideoAdded 
-} = load(eventsFile).killrvideo.video_catalog.events;
+function logErrors(err) {
+  logger.log('error', '', err);
+  throw err;
+}
 
 /**
  * The video catalog service implementation.
@@ -34,7 +28,7 @@ const implementation = {
   },
 
   getLatestVideoPreviews(call, cb) {
-    cb(new Error('Not implemented'));
+    getLatestVideoPreviewsAsync(call).catch(logErrors).asCallback(cb);
   },
 
   getUserVideoPreviews(call, cb) {
@@ -46,6 +40,6 @@ const implementation = {
  * Video Catalog Service, responsible for tracking the catalog of videos available for playback.
  */
 export default {
-  service,
+  service: VideoCatalogService.service,
   implementation 
 };
