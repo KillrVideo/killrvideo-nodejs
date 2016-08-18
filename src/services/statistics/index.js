@@ -1,9 +1,5 @@
-import { load } from '../common/load';
-
-// Load the protobuf definition to get the service object
-const file = 'statistics/statistics_service.proto';
-const proto = load(file);
-const { service } = proto.killrvideo.statistics.StatisticsService;
+import { StatisticsService } from './protos';
+import { getNumberOfPlays } from './get-number-of-plays';
 
 /**
  * The stats service implementation.
@@ -13,15 +9,13 @@ const implementation = {
     cb(new Error('Not implemented'));
   },
 
-  getNumberOfPlays(call, cb) {
-    cb(new Error('Not implemented'));
-  }
+  getNumberOfPlays
 }; 
 
 /**
  * Statistics service that tracks stats for videos.
  */
 export default {
-  service,
+  service: StatisticsService.service,
   implementation 
 };
