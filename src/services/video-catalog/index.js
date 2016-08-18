@@ -1,11 +1,5 @@
-import { logger } from '../../common/logging';
 import { VideoCatalogService } from './protos';
-import { getLatestVideoPreviewsAsync } from './get-latest-video-previews';
-
-function logErrors(err) {
-  logger.log('error', '', err);
-  throw err;
-}
+import { getLatestVideoPreviews } from './get-latest-video-previews';
 
 /**
  * The video catalog service implementation.
@@ -27,10 +21,8 @@ const implementation = {
     cb(new Error('Not implemented'));
   },
 
-  getLatestVideoPreviews(call, cb) {
-    getLatestVideoPreviewsAsync(call).catch(logErrors).asCallback(cb);
-  },
-
+  getLatestVideoPreviews,
+  
   getUserVideoPreviews(call, cb) {
     cb(new Error('Not implemented'));
   }

@@ -73,7 +73,7 @@ function mapRowToVideoPreview(row) {
 /**
  * Gets the latest video previews.
  */
-export function getLatestVideoPreviewsAsync(call) {
+export function getLatestVideoPreviews(call, cb) {
   return Promise.try(() => {
     let { request } = call;
     let results = [];
@@ -144,5 +144,6 @@ export function getLatestVideoPreviewsAsync(call) {
       videoPreviews: results.map(mapRowToVideoPreview),
       pagingState
     });
-  });
+  })
+  .asCallback(cb);
 };
