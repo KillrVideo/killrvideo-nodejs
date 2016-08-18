@@ -24,7 +24,7 @@ function createClientAsync(keyspace, queryOptions) {
   return lookupServiceAsync('cassandra')
     .then(contactPoints => {
       let client = new Client({ contactPoints, keyspace, queryOptions });
-      Promise.promisifyAll(client);
+      Promise.promisifyAll(client); // This creates "Async" versions of methods that return promises
       return client;
     });
 }
@@ -74,7 +74,7 @@ let clientInstance = null;
  * Gets a Cassandra client instance.
  */
 export function getCassandraClient() {
-  if (clientInstance !== null) {
+  if (clientInstance === null) {
     throw new Error('No client instance found. Did you forget to call initCassandraAsync?');
   }
 
