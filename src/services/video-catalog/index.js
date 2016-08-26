@@ -1,5 +1,6 @@
 import { VideoCatalogService } from './protos';
 import { getLatestVideoPreviews } from './get-latest-video-previews';
+import { getVideo } from './get-video';
 
 /**
  * The video catalog service implementation.
@@ -13,9 +14,7 @@ const implementation = {
     cb(new Error('Not implemented'));
   },
 
-  getVideo(call, cb) {
-    cb(new Error('Not implemented'));
-  },
+  getVideo,
 
   getVideoPreviews(call, cb) {
     cb(new Error('Not implemented'));
