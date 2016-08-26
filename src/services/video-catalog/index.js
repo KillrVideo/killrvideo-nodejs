@@ -1,6 +1,7 @@
 import { VideoCatalogService } from './protos';
 import { getLatestVideoPreviews } from './get-latest-video-previews';
 import { getVideo } from './get-video';
+import { submitYouTubeVideo } from './submit-youtube-video';
 
 /**
  * The video catalog service implementation.
@@ -10,10 +11,7 @@ const implementation = {
     cb(new Error('Not implemented'));
   },
 
-  submitYouTubeVideo(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  submitYouTubeVideo,
   getVideo,
 
   getVideoPreviews(call, cb) {
