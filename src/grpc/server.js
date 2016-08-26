@@ -3,17 +3,16 @@ import Promise from 'bluebird';
 import { Server, ServerCredentials } from 'grpc';
 import { logger } from '../common/logging';
 
-const hostAndPort = '0.0.0.0:50101';
-
 /**
  * Class that wraps an underlying Grpc server object and allows it to be started/stopped. Emits
  * 'start' and 'stop' events for when this happens.
  */
 export class GrpcServer extends EventEmitter {
-  constructor(services) {
+  constructor(services, ipAndPort) {
     super();
     this._services = services;
     this._stopAsync = null;
+    this._ipAndPort = ipAndPort;
   }
 
   /**
@@ -32,12 +31,12 @@ export class GrpcServer extends EventEmitter {
     });
 
     // Bind the server and start all services
-    server.bind(hostAndPort, ServerCredentials.createInsecure());
+    server.bind(this._ipAndPort, ServerCredentials.createInsecure());
 
     // Save stop method
     this._stopAsync = Promise.promisify(server.tryShutdown, { context: server });
 
-    logger.log('debug', `Starting Grpc server on ${hostAndPort}`);
+    logger.log('debug', `Starting Grpc server on ${this._ipAndPort}`);
     server.start();
     this._emitEvent('start');
     logger.log('debug', 'Started Grpc server');
@@ -63,6 +62,6 @@ export class GrpcServer extends EventEmitter {
   }
 
   _emitEvent(eventName) {
-    this.emit(eventName, hostAndPort, this._services.map(s => s.service));
+    this.emit(eventName, this._ipAndPort, this._services.map(s => s.service));
   }
 };

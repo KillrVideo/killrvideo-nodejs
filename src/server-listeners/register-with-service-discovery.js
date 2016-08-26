@@ -15,7 +15,7 @@ let startStopPromise = null;
  * Register all services with etcd for service discovery on start.
  */
 export function register(grpcServer) {
-  grpcServer.on('start', function registerOnStart(hostAndPort, services) {
+  grpcServer.on('start', function registerOnStart(ipAndPort, services) {
     let uniqueId = getAppUniqueId();
 
     // Cancel any previous attempts if still around
@@ -25,7 +25,7 @@ export function register(grpcServer) {
 
     // Register each service with etcd
     let startServices = services.map(s => {
-      let registerFn = () => registerServiceAsync(s.name, uniqueId, hostAndPort);
+      let registerFn = () => registerServiceAsync(s.name, uniqueId, ipAndPort);
       return withRetries(registerFn, Infinity, 5, `Could not register ${s.name} in service registry`, false);
     });
     startStopPromise = Promise.all(startServices).tap(() => { startStopPromise = null; })
@@ -38,7 +38,7 @@ let stopPromise = null;
  * Remove all services from etcd on stop.
  */
 export function remove(grpcServer) {
-  grpcServer.on('stop', function removeOnStop(hostAndPort, services) {
+  grpcServer.on('stop', function removeOnStop(ipAndPort, services) {
     let uniqueId = getAppUniqueId();
 
     // Cancel any previous attempts
@@ -48,7 +48,7 @@ export function remove(grpcServer) {
 
     // Remove each service from etcd
     let stopServices = services.map(s => {
-      let removeFn = () => removeServiceAsync(s.name, uniqueId, hostAndPort);
+      let removeFn = () => removeServiceAsync(s.name, uniqueId, ipAndPort);
       return withRetries(removeFn, Infinity, 5, `Could not remove ${s.name} from service registry`, false);
     });
     startStopPromise = Promise.all(stopServices).tap(() => { startStopPromise = null; });

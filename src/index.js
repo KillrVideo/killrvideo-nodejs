@@ -14,6 +14,8 @@ Promise.config({ cancellation: true });
 // Load environment variables from docker's .env file
 dotenv.config({ path: resolve(__dirname, '../.env') });
 process.env.KILLRVIDEO_ETCD = `${process.env.KILLRVIDEO_DOCKER_IP}:2379`;
+process.env.KILLRVIDEO_IP = process.env.KILLRVIDEO_HOST_IP;
+process.env.KILLRVIDEO_PORT = '50101';
 
 /**
  * Start the application and all Grpc services.
@@ -29,7 +31,14 @@ function startAsync() {
     .then(() => {
       // Create a Grpc server and register all listeners
       logger.log('info', 'Starting all Grpc services');
-      let server = new GrpcServer(services);
+      
+      // Get IP and Port to listen on
+      if (!process.env.KILLRVIDEO_IP || !process.env.KILLRVIDEO_PORT) {
+        throw new Error('Must specify KILLRVIDEO_IP and KILLRVIDEO_PORT environment variables');
+      }
+      let ipAndPort = `${process.env.KILLRVIDEO_IP}:${process.env.KILLRVIDEO_PORT}`;
+      
+      let server = new GrpcServer(services, ipAndPort);
       listeners.forEach(listener => listener(server));
 
       // Start the server and return it
