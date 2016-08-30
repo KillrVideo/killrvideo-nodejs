@@ -1,11 +1,11 @@
 import Promise from 'bluebird';
 import moment from 'moment';
 import { GetLatestVideoPreviewsResponse, VideoPreview } from './protos';
+import { LATEST_VIDEOS_MAX_DAYS } from './constants';
 import { toCassandraUuid, toJavaScriptDate, toProtobufTimestamp, toProtobufUuid } from '../common/protobuf-conversions';
 import { getCassandraClient } from '../../common/cassandra';
 
-// The length of time a video will stay in the latest videos table 
-const LATEST_VIDEOS_MAX_DAYS = 7;
+
 
 /**
  * Helper function for creating latest videos paging state tokens.

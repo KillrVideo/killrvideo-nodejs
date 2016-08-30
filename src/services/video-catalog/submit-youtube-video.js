@@ -6,6 +6,7 @@ import { publishAsync } from '../../common/message-bus';
 import { toCassandraUuid, toProtobufTimestamp } from '../common/protobuf-conversions';
 import { SubmitYouTubeVideoResponse, VideoLocationType } from './protos';
 import { YouTubeVideoAdded } from './events';
+import { LATEST_VIDEOS_MAX_DAYS } from './constants';
 
 const videosCql = `
 INSERT INTO videos (
@@ -22,6 +23,9 @@ INSERT INTO latest_videos (
   yyyymmdd, added_date, videoid, userid, name, preview_image_location) 
 VALUES (?, ?, ?, ?, ?, ?) 
 USING TTL ?`;
+
+// Number of seconds a record should stay in the latest videos table
+const LATEST_VIDEOS_TTL_SECONDS = LATEST_VIDEOS_MAX_DAYS * 24 * 60 * 60;
 
 /**
  * Submits a YouTube video to the catalog.
@@ -64,7 +68,10 @@ export function submitYouTubeVideo(call, cb) {
         ]
       },
       { query: userVideosCql, params: [ userId, addedDate, videoId, request.name, previewImageLocation ] },
-      { query: latestVideosCql, params: [ yyyymmdd, addedDate, videoId, userId, request.name, previewImageLocation ] }
+      { 
+        query: latestVideosCql, 
+        params: [ yyyymmdd, addedDate, videoId, userId, request.name, previewImageLocation, LATEST_VIDEOS_TTL_SECONDS ] 
+      }
     ];
 
     // Generate a timestamp for the queries in the batch from the added date
