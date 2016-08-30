@@ -1,5 +1,6 @@
 import { CommentsService } from './protos';
 import { commentOnVideo } from './comment-on-video';
+import { getVideoComments } from './get-video-comments';
 
 /**
  * The comments service implementation.
@@ -11,9 +12,7 @@ const implementation = {
     cb(new Error('Not implemented'));
   },
 
-  getVideoComments(call, cb) {
-    cb(new Error('Not implemented'));
-  }
+  getVideoComments
 }; 
 
 /**
