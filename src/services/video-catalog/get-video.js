@@ -29,7 +29,7 @@ export function getVideo(call, cb) {
       name: row.name,
       description: row.description,
       location: row.location,
-      locationType: new VideoLocationType(row.location_type),
+      locationType: row.location_type,
       tags: row.tags,
       addedDate: toProtobufTimestamp(row.added_date)
     });
