@@ -1,12 +1,11 @@
 import { CommentsService } from './protos';
+import { commentOnVideo } from './comment-on-video';
 
 /**
  * The comments service implementation.
  */
 const implementation = {
-  commentOnVideo(call, cb) {
-    cb(new Error('Not implemented'));
-  },
+  commentOnVideo,
 
   getUserComments(call, cb) {
     cb(new Error('Not implemented'));

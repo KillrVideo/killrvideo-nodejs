@@ -1,3 +1,7 @@
+// Import the regenerator runtime so async generators work in the transpiled code
+import 'regenerator-runtime/runtime';
+
+// Regular imports
 import { resolve } from 'path';
 import process from 'process';
 import dotenv from 'dotenv';
