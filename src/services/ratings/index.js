@@ -1,19 +1,15 @@
 import { RatingsService } from './protos';
 import { getRating } from './get-rating';
+import { getUserRating } from './get-user-rating';
+import { rateVideo } from './rate-video';
 
 /**
  * The ratings service implementation.
  */
 const implementation = {
-  rateVideo(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  rateVideo,
   getRating,
-
-  getUserRating(call, cb) {
-    cb(new Error('Not implemented'));
-  }
+  getUserRating
 }; 
 
 /**

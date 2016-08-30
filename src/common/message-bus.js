@@ -11,3 +11,11 @@ export function publishAsync(event) {
   logger.log('verbose', util.inspect(event));
   return Promise.resolve();
 };
+
+/**
+ * Publishes an event to the message bus and invokes the specified callback when
+ * complete.
+ */
+export function publish(event, cb) {
+  publishAsync(event).asCallback(cb);
+};
