@@ -7,7 +7,10 @@ import util from 'util';
  * when the publish is complete.
  */
 export function publishAsync(event) {
-  logger.log('verbose', 'Publish:');
+  // Get the Protobuf short message name
+  let eventType = event.$type.name;
+
+  logger.log('verbose', `Publish: ${eventType}`);
   logger.log('verbose', util.inspect(event));
   return Promise.resolve();
 };
