@@ -1,14 +1,21 @@
 import Promise from 'bluebird';
 import { getCassandraClient } from '../../common/cassandra';
+import config from '../../common/config';
 import { toCassandraUuid, toProtobufUuid, toProtobufTimestamp } from '../common/protobuf-conversions';
+import { NotImplementedError } from '../common/grpc-errors';
 import { GetRelatedVideosResponse, SuggestedVideoPreview } from './protos';
 
 /**
  * Gets a list of videos related to another video.
  */
 export function getRelatedVideos(call, cb) {
+  // Pick appropriate implementation
+  let fn = config.get('dseEnabled') === true
+    ? getRelatedVideosWithDseSearch
+    : getRelatedVideosByTag;
+
   // Invoke async function, wrap with bluebird Promise, and invoke callback when finished
-  return Promise.resolve(getRelatedVideosByTag(call)).asCallback(cb);
+  return Promise.resolve(fn(call)).asCallback(cb);
 };
 
 /**
@@ -134,5 +141,5 @@ async function getRelatedVideosByTag(call) {
  * Gets related videos using DSE Search "More Like This" functionality.
  */
 async function getRelatedVideosWithDseSearch(call) {
-
+  throw new NotImplementedError('Not implemented');
 }
