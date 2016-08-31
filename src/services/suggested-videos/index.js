@@ -1,15 +1,13 @@
 import { SuggestedVideoService } from './protos';
 import { getRelatedVideos } from './get-related-videos';
+import { getSuggestedForUser } from './get-suggested-for-user';
 
 /**
  * The suggested video service implementation.
  */
 const implementation = {
   getRelatedVideos,
-  
-  getSuggestedForUser(call, cb) {
-    cb(new Error('Not implemented'));
-  }
+  getSuggestedForUser
 }; 
 
 /**
