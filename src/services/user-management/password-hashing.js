@@ -64,6 +64,7 @@ export function validatePasswordAsync(password, goodHash) {
     let digest = hashParts[DIGEST_IDX];
     let iterations = parseInt(hashParts[ITERATION_IDX]);
     let salt = new Buffer(hashParts[SALT_IDX], 'base64');
+    let hash = new Buffer(hashParts[HASH_IDX], 'base64');
     return crypto.pbkdf2Async(password, salt, iterations, hash.length, digest);
   });
 

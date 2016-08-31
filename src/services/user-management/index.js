@@ -1,17 +1,14 @@
 import { UserManagementService } from './protos';
 import { getUserProfile } from './get-user-profile';
 import { createUser } from './create-user';
+import { verifyCredentials } from './verify-credentials';
 
 /**
  * The user management service implementation.
  */
 const implementation = {
   createUser,
-
-  verifyCredentials(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  verifyCredentials,
   getUserProfile
 }; 
 
