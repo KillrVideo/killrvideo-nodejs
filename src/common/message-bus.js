@@ -37,8 +37,8 @@ export function publishAsync(event) {
     logger.log('debug', `Publish ${eventName} to ${handlers.length} handlers`);
     logger.log('debug', util.inspect(event));
 
-    // Invoke each handler with event and wrap with Promise.resolve since the handler may be async
-    return handlers.map(h => Promise.resolve(h(event)));
+    // Invoke each handler with event
+    return handlers.map(h => h(event));
   })
   .all() // Publish is complete when all handlers are done
   .return();  // Just return undefined value
@@ -61,9 +61,9 @@ export function subscribeAsync(eventType, handler) {
   return Promise.try(() => {
     let eventName = getFullyQualifiedName(eventType.$type);
 
-    // Get handlers (or empty array if none) and add handler
+    // Get handlers (or empty array if none) and add handler, wrapping with Promise.method since it could be sync or async
     let handlers = handlersByEventName[eventName] || [];
-    handlers.push(handler);
+    handlers.push(Promise.method(handler));
 
     logger.log('debug', `Subscribe ${eventName} handler ${handlers.length}`);
 

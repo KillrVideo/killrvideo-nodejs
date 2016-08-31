@@ -1,6 +1,7 @@
 import { SearchService } from './protos';
 import { searchVideos } from './search-videos';
 import { getQuerySuggestions } from './get-query-suggestions';
+import handlers from './handlers';
 
 /**
  * The search service implementation.
@@ -15,5 +16,6 @@ const implementation = {
  */
 export default {
   service: SearchService.service,
-  implementation 
+  implementation,
+  handlers
 };
