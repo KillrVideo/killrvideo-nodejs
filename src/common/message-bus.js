@@ -3,16 +3,45 @@ import { logger } from './logging';
 import util from 'util';
 
 /**
+ * Recursively gets the fully qualified name of a probuf.js reflection value
+ */
+function getFullyQualifiedName(value) {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  let name = value.name;
+  const parentName = getFullyQualifiedName(value.parent);
+  if (parentName !== '') {
+    name = parentName + '.' + name;
+  }
+  return name;
+}
+
+/**
+ * Map of subscribers by event fully-qualified name.
+ */
+const handlersByEventName = {};
+
+/**
  * Publishes an event to the message bus and returns a Promise that is resolved
  * when the publish is complete. The event object should be a Protobuf message.
  */
 export function publishAsync(event) {
-  // Get the Protobuf short message name
-  let eventType = event.$type.name;
+  return Promise.try(() => {
+    let eventName = getFullyQualifiedName(event.$type);
 
-  logger.log('verbose', `Publish: ${eventType}`);
-  logger.log('verbose', util.inspect(event));
-  return Promise.resolve();
+    // Get handlers (or empty array if none)
+    let handlers = handlersByEventName[eventName] || [];
+
+    logger.log('debug', `Publish ${eventName} to ${handlers.length} handlers`);
+    logger.log('debug', util.inspect(event));
+
+    // Invoke each handler with event and wrap with Promise.resolve since the handler may be async
+    return handlers.map(h => Promise.resolve(h(event)));
+  })
+  .all() // Publish is complete when all handlers are done
+  .return();  // Just return undefined value
 };
 
 /**
@@ -29,7 +58,18 @@ export function publish(event, cb) {
  * should be a Protobuf message definition.
  */
 export function subscribeAsync(eventType, handler) {
-  return Promise.resolve();
+  return Promise.try(() => {
+    let eventName = getFullyQualifiedName(eventType.$type);
+
+    // Get handlers (or empty array if none) and add handler
+    let handlers = handlersByEventName[eventName] || [];
+    handlers.push(handler);
+
+    logger.log('debug', `Subscribe ${eventName} handler ${handlers.length}`);
+
+    // Make sure index is updated in case we created a new array    
+    handlersByEventName[eventName] = handlers;
+  });
 };
 
 /**

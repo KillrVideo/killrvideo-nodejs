@@ -8,6 +8,7 @@ import config from './common/config';
 import { initCassandraAsync } from './common/cassandra';
 import { logger, setLoggingLevel } from './common/logging';
 import { lookupServiceAsync } from './common/service-discovery';
+import { subscribeAsync } from './common/message-bus';
 import { GrpcServer } from './grpc/server';
 import { services } from './services';
 import { listeners } from './server-listeners';
@@ -26,7 +27,26 @@ function startAsync() {
 
   // Start by initializing cassandra
   return initCassandraAsync()
+    // Register all service event handlers
+    .then(() => {
+      return services.reduce((allSubs, serviceDef) => {
+        // If service has no event handlers, just continue
+        if (serviceDef.hasOwnProperty('handlers') === false) {
+          return allSubs;
+        }
+
+        // Subscribe and add subscription promise to allSubs
+        serviceDef.handlers.forEach(handlerDef => {
+          allSubs.push(subscribeAsync(handlerDef.eventType, handlerDef.handler));
+        });
+        return allSubs;
+      }, []);
+    })
+    // Wait for all subscriptions to finish
+    .all()  
+    // Find the web UI's host and port
     .then(() => lookupServiceAsync('web'))
+    // Start the Grpc server to process requests
     .then(webIpAndPorts => {
       // Create a Grpc server and register all listeners
       logger.log('info', 'Starting all Grpc services');
