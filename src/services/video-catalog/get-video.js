@@ -30,7 +30,7 @@ export function getVideo(call, cb) {
       description: row.description,
       location: row.location,
       locationType: row.location_type,
-      tags: row.tags,
+      tags: row.tags === null ? [] : row.tags,
       addedDate: toProtobufTimestamp(row.added_date)
     });
   })
