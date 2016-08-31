@@ -1,18 +1,11 @@
-import { load } from '../common/load';
-
-// Load the protobuf definition to get the service object
-const file = 'search/search_service.proto';
-const proto = load(file);
-const { service } = proto.killrvideo.search.SearchService;
+import { SearchService } from './protos';
+import { searchVideos } from './search-videos';
 
 /**
  * The search service implementation.
  */
 const implementation = {
-  searchVideos(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  searchVideos,
   getQuerySuggestions(call, cb) {
     cb(new Error('Not implemented'));
   }
@@ -22,6 +15,6 @@ const implementation = {
  * Search service which allows searching for videos.
  */
 export default {
-  service,
+  service: SearchService.service,
   implementation 
 };
