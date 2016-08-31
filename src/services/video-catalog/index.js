@@ -4,15 +4,13 @@ import { getVideo } from './get-video';
 import { submitYouTubeVideo } from './submit-youtube-video';
 import { getVideoPreviews } from './get-video-previews';
 import { getUserVideoPreviews } from './get-user-video-previews';
+import { submitUploadedVideo } from './submit-uploaded-video';
 
 /**
  * The video catalog service implementation.
  */
 const implementation = {
-  submitUploadedVideo(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  submitUploadedVideo,
   submitYouTubeVideo,
   getVideo,
   getVideoPreviews,
