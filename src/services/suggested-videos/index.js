@@ -1,18 +1,12 @@
-import { load } from '../common/load';
-
-// Load the protobuf definition to get the service object
-const file = 'suggested-videos/suggested_videos_service.proto';
-const proto = load(file);
-const { service } = proto.killrvideo.suggested_videos.SuggestedVideoService;
+import { SuggestedVideoService } from './protos';
+import { getRelatedVideos } from './get-related-videos';
 
 /**
  * The suggested video service implementation.
  */
 const implementation = {
-  getRelatedVideos(call, cb) {
-    cb(new Error('Not implemented'));
-  },
-
+  getRelatedVideos,
+  
   getSuggestedForUser(call, cb) {
     cb(new Error('Not implemented'));
   }
@@ -22,6 +16,6 @@ const implementation = {
  * Suggested video service that's responsible for generating video suggestions for users and videos.
  */
 export default {
-  service,
+  service: SuggestedVideoService.service,
   implementation 
 };
