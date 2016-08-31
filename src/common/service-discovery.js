@@ -1,6 +1,7 @@
 import Promise from 'bluebird';
 import Etcd from 'node-etcd';
 import { logger } from './logging';
+import config from './config';
 
 // Reuse a singleton instance of the etcd client for all operations
 let etcdClient = null;
@@ -13,11 +14,10 @@ function getEtcdClient() {
     return etcdClient;
   }
 
-  if (!process.env.KILLRVIDEO_ETCD) {
-    throw new Error('Could not find KILLRVIDEO_ETCD environment variable');
-  }
-
-  let client = new Etcd(`http://${process.env.KILLRVIDEO_ETCD}`);
+  let etcdConfig = config.get('etcd');
+  logger.log('debug', `Using etcd at ${etcdConfig.ip}:${etcdConfig.port} for service discovery`);
+  
+  let client = new Etcd(`http://${etcdConfig.ip}:${etcdConfig.port}`);
   Promise.promisifyAll(client);
   etcdClient = client;
   return etcdClient;

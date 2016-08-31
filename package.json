@@ -28,6 +28,7 @@
     "async": "^2.0.1",
     "bluebird": "^3.4.1",
     "cassandra-driver": "^3.1.1",
+    "convict": "^1.4.0",
     "dotenv": "^2.0.0",
     "grpc": "^1.0.0-pre2",
     "moment": "^2.14.1",
