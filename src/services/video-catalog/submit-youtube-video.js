@@ -85,5 +85,9 @@ export function submitYouTubeVideo(call, cb) {
     // Tell the world about the new YouTube video
     return publishAsync(event);
   })
+  .then(() => {
+    // Return the response
+    return new SubmitYouTubeVideoResponse();
+  })
   .asCallback(cb);
 };
