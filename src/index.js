@@ -2,7 +2,7 @@
 import 'regenerator-runtime/runtime';
 
 // Regular imports
-import process from 'process';
+import { createInterface } from 'readline';
 import Promise from 'bluebird';
 import config from './common/config';
 import { initCassandraAsync } from './common/cassandra';
@@ -83,13 +83,16 @@ function stop() {
   }
 }
 
-// Listen for Ctrl+C to exit
-let stdin = process.stdin;
-stdin.setRawMode(true);
-stdin.resume();
-stdin.setEncoding('utf8');
-stdin.on('data', key => {
-  if (key === '\u0003') {
-    stop();
-  }
-});
+// Try to gracefully shutdown on SIGTERM and SIGINT
+process.on('SIGTERM', stop);
+process.on('SIGINT', stop);
+
+// Graceful shutdown attempt in Windows
+if (process.platform === 'win32') {
+  // Simulate SIGINT on Windows (see http://stackoverflow.com/questions/10021373/what-is-the-windows-equivalent-of-process-onsigint-in-node-js)
+  createInterface({
+    input: process.stdin,
+    output: process.stdout
+  })
+  .on('SIGINT', () => process.emit('SIGINT'));
+}
