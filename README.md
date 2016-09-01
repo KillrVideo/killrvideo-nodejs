@@ -1,4 +1,4 @@
-# KillrVideo NodeJS
+# KillrVideo Node.js
 
 A reference application for Node.js developers looking to learn more about using 
 [Apache Cassandra][cassandra] and [DataStax Enterprise][dse] in their applications and 
