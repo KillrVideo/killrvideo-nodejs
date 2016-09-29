@@ -9,7 +9,7 @@
     "build": "npm-run-all --parallel \"build:*\"",
     "build:js": "babel src --out-dir dist --source-maps",
     "build:protos": "cpx \"lib/killrvideo-service-protos/src/**/*\" dist/protos --verbose",
-    "build:googleprotos": "cpx \"lib/google/**\" dist/protos/google --verbose",
+    "build:googleprotos": "node scripts/copy-google-protos.js dist/protos",
     "build:data": "cpx \"lib/killrvideo-data/*.cql\" dist/data",
     "watch": "npm-run-all clean --parallel \"build:* -- --watch\""
   },
@@ -41,6 +41,7 @@
     "babel-plugin-transform-async-to-generator": "^6.8.0",
     "babel-preset-es2015": "^6.14.0",
     "cpx": "^1.3.2",
+    "grpc-tools": "^1.0.0",
     "npm-run-all": "^2.3.0",
     "rimraf": "^2.5.4"
   }
