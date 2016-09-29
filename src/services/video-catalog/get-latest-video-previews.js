@@ -5,8 +5,6 @@ import { LATEST_VIDEOS_MAX_DAYS } from './constants';
 import { toCassandraUuid, toJavaScriptDate, toProtobufTimestamp, toProtobufUuid } from '../common/protobuf-conversions';
 import { getCassandraClient } from '../../common/cassandra';
 
-
-
 /**
  * Helper function for creating latest videos paging state tokens.
  */
@@ -26,6 +24,14 @@ function createPagingState(buckets, bucketIndex, rowsPagingState) {
 }
 
 /**
+ * The pattern for parsing paging state which is:
+ *   - yyyyMMdd bucket integers repeated LATEST_VIDEOS_MAX_DAYS + 1 times
+ *   - a current bucket index integer
+ *   - an optional rowset paging state string for the position in the current bucket
+ */
+const PAGING_STATE_REGEX_PATTERN = `((?:[0-9]{8}){${LATEST_VIDEOS_MAX_DAYS + 1}})([0-9]{1})(.*)`;
+
+/**
  * Helper function for parsing latest videos paging state tokens.
  */
 function parsePagingState(pagingState) {
@@ -35,11 +41,20 @@ function parsePagingState(pagingState) {
   if (pagingState !== '') {
     // The paging state will be yyyyMMdd buckets 8 times, followed by 1 bucket index int, 
     // followed by the row paging state string
-    let match = /([0-9]{8}){8}([0-9]{1})(.*)/.exec(pagingState);
-    if (match === null) 
+    let match = new RegExp(PAGING_STATE_REGEX_PATTERN).exec(pagingState);
+    if (match === null)
       throw new Error('Bad paging state');
 
-    throw new Error('TODO: Not implemented');
+    // Split the bucket string matched into the array of buckets
+    buckets = match[1].match(/[0-9]{8}/g);
+
+    // Index should just be an integer value
+    bucketIndex = parseInt(match[2]);
+
+    // We may or may not have row paging state
+    rowsPagingState = match.length === 4 ? match[3] : null;
+
+    return { buckets, bucketIndex, rowsPagingState };
   }
 
   // Generate initial values since no paging state was provided
