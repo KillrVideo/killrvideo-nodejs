@@ -6,7 +6,7 @@ services:
   web:
     image: killrvideo/killrvideo-web:1.2.3
     ports:
-    - "${KILLRVIDEO_DOCKER_IP}:3000:3000"
+    - "3000:3000"
     depends_on:
     - dse
     - etcd
