@@ -25,8 +25,8 @@ if [ "$IS_TOOLBOX" = true ]; then
     # Just use the command that comes with docker-machine
     DOCKER_IP=$(docker-machine ip)
 else
-    # Hardcode the IP in Docker for Mac because we're ultimately going to create a loopback alias for it
-    DOCKER_IP=10.0.75.2
+    # The create-environment.sh script should have setup a loopback alias, so use that IP
+    DOCKER_IP=$LOOPBACK_IP
 fi
 
 # Get the docker VM Host's IP address
@@ -36,8 +36,8 @@ if [ "$IS_TOOLBOX" = true ]; then
     # Remove suffix
     HOST_IP=${HOST_IP//\/[[:digit:]][[:digit:]]/}
 else
-    # Hardcode the IP in Docker for Mac because we're ultimately going to create a loopback alias for it
-    HOST_IP=10.0.75.1
+    # The create-environment.sh script should have setup a loopback alias, so use that IP
+    HOST_IP=$LOOPBACK_IP
 fi
 
 # Write values to stdout
