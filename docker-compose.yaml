@@ -7,7 +7,7 @@ services:
     command: [ -advertise-client-urls, "http://${KILLRVIDEO_DOCKER_IP}:2379", -listen-client-urls, "http://0.0.0.0:2379" ]
     ports:
     # The client port
-    - "2379:2379"
+    - "${KILLRVIDEO_DOCKER_IP}:2379:2379"
     environment:
       SERVICE_2379_NAME: etcd
 
@@ -26,7 +26,7 @@ services:
   dse:
     image: luketillman/datastax-enterprise:4.8.7
     ports:
-    - "9042:9042"
+    - "${KILLRVIDEO_DOCKER_IP}:9042:9042"
     cap_add:
     - IPC_LOCK
     ulimits:
