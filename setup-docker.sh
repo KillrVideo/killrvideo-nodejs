@@ -23,4 +23,4 @@ echo 'Pulling all docker dependencies'
 docker-compose pull
 
 echo
-echo "You can now start docker dependencies with \'docker-compose up -d\'"
+echo "You can now start docker dependencies with 'docker-compose up -d'"
