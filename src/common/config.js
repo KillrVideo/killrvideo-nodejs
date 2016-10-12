@@ -57,7 +57,7 @@ const conf = convict({
   dseEnabled: {
     doc: 'Whether or not to use DataStax Enterprise service implementations of services',
     format: Boolean,
-    default: false,
+    default: true,
     env: 'KILLRVIDEO_DSE_ENABLED'
   },
 

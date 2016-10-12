@@ -1,5 +1,7 @@
 import Promise from 'bluebird';
+import rp from 'request-promise';
 import config from '../../common/config';
+import { lookupServiceAsync } from '../../common/service-discovery';
 import { getCassandraClient } from '../../common/cassandra';
 import { NotImplementedError } from '../common/grpc-errors';
 import { GetQuerySuggestionsResponse } from './protos';
@@ -37,10 +39,53 @@ async function getTagSuggestions(call) {
   });
 }
 
+// Cache promise
+let getSearchClientPromise = null;
+
+function getSearchClientAsync() {
+  if (getSearchClientPromise === null) {
+    getSearchClientPromise = lookupServiceAsync('dse-search')
+      .then(hostAndPorts => {
+        // Just use the first host:port returned
+        return rp.defaults({
+          baseUrl: `http://${hostAndPorts[0]}/solr`
+        });
+      })
+      .catch(err => {
+        // Remove cached promise and rethrow
+        lookupSearchPromise = null;
+        throw err;
+      });
+  }
+  return getSearchClientPromise;
+}
+
 /**
- * Uses the spellcheck module in DSE Search to get typeahead suggestions.
+ * Uses the Suggester module in DSE Search to get typeahead suggestions.
  */
 async function getQuerySuggestionsWithDseSearch(call) {
-  throw new NotImplementedError('Not implemented');
+  let { request } = call;
+
+  // Get HTTP client for DSE search Solr API
+  let doRequest = await getSearchClientAsync();
+
+  // Make request
+  let requestOpts = {
+    url: '/killrvideo.videos/suggest',
+    method: 'POST',
+    form: {
+      'wt': 'json',
+      'suggest.build': 'true',
+      'suggest.q': request.query
+    },
+    json: true
+  };
+  let searchResponse = await doRequest(requestOpts);
+
+  // Convert results to response
+  return new GetQuerySuggestionsResponse({
+    query: request.query,
+    suggestions: searchResponse.suggest.searchSuggester[request.query].suggestions.map(s => s.term)
+  });
 }
 
