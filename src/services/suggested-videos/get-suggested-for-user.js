@@ -34,5 +34,7 @@ function emptySuggestions(call) {
  * Use DSE analytics to get personalized suggestions for a user.
  */
 async function getSuggestedWithDseAnalytics(call) {
-  throw new NotImplementedError('Not implemented');
+  // TODO: Since the Spark job that populates this data is not currently running,
+  // just return an empty response
+  return emptySuggestions(call);
 }
