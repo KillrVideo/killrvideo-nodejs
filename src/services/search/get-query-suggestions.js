@@ -53,7 +53,7 @@ function getSearchClientAsync() {
       })
       .catch(err => {
         // Remove cached promise and rethrow
-        lookupSearchPromise = null;
+        getSearchClientPromise = null;
         throw err;
       });
   }

@@ -1,4 +1,6 @@
 import Promise from 'bluebird';
+import rp from 'request-promise';
+import { lookupServiceAsync } from '../../common/service-discovery';
 import { getCassandraClient } from '../../common/cassandra';
 import config from '../../common/config';
 import { toCassandraUuid, toProtobufUuid, toProtobufTimestamp } from '../common/protobuf-conversions';
@@ -137,9 +139,78 @@ async function getRelatedVideosByTag(call) {
   });
 }
 
+// Cache promise
+let getSearchClientPromise = null;
+
+function getSearchClientAsync() {
+  if (getSearchClientPromise === null) {
+    getSearchClientPromise = lookupServiceAsync('dse-search')
+      .then(hostAndPorts => {
+        // Just use the first host:port returned
+        return rp.defaults({
+          baseUrl: `http://${hostAndPorts[0]}/solr`
+        });
+      })
+      .catch(err => {
+        // Remove cached promise and rethrow
+        getSearchClientPromise = null;
+        throw err;
+      });
+  }
+  return getSearchClientPromise;
+}
+
 /**
  * Gets related videos using DSE Search "More Like This" functionality.
  */
 async function getRelatedVideosWithDseSearch(call) {
-  throw new NotImplementedError('Not implemented');
+  let { request } = call;
+
+  // Parse paging state if present
+  let start = 0;
+  if (request.pagingState !== null && request.pagingState !== '') {
+    start = parseInt(request.pagingState);
+  }
+
+  // Get HTTP client for DSE search Solr API
+  let doRequest = await getSearchClientAsync();
+
+  // Make request
+  let requestOpts = {
+    url: '/killrvideo.videos/mlt',
+    method: 'POST',
+    form: {
+      'wt': 'json',
+      'q': `videoid:"${request.videoId.value}"`, // Just use string representation of UUID in query
+      'start': start,
+      'rows': request.pageSize,
+      // More like this fields to consider
+      'mlt.fl': 'name,description,tags',
+      // MLT Minimum Document Frequency - the frequency at which words will be ignored which do not occur in at least this many docs
+      'mlt.mindf': 2,
+      // MLT Minimum Term Frequency - the frequency below which terms will be ignored in the source doc
+      'mlt.mintf': 2
+    },
+    json: true
+  };
+  let searchResponse = await doRequest(requestOpts);
+
+  // Get the starting index for the next page, then compare against total results available to determine paging state
+  let nextPageStartIdx = searchResponse.response.start + searchResponse.response.docs.length;
+  let pagingState = nextPageStartIdx === searchResponse.numFound
+    ? ''
+    : nextPageStartIdx.toString();
+
+  // Convert the search response to gRPC response object
+  return new GetRelatedVideosResponse({
+    videoId: request.videoId,
+    videos: searchResponse.response.docs.map(doc => new SuggestedVideoPreview({
+      videoId: { value: doc.videoid },
+      addedDate: toProtobufTimestamp(new Date(doc.added_date)),
+      name: doc.name,
+      previewImageLocation: doc.preview_image_location,
+      userId: { value: doc.userid }
+    })),
+    pagingState
+  });
 }
