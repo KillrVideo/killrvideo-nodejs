@@ -75,7 +75,9 @@ async function getQuerySuggestionsWithDseSearch(call) {
     method: 'POST',
     form: {
       'wt': 'json',
-      'suggest.build': 'true',
+      // We'll build on every request but in a real app, we'd probably take advantage of Solr config
+      // buildOnCommit or buildOnOptimize settings
+      'suggest.build': 'true',  
       'suggest.q': request.query
     },
     json: true
