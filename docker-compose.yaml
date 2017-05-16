@@ -25,7 +25,7 @@ services:
 
   # One instance of DataStax Studio
   studio:
-    image: luketillman/datastax-studio:2.0.0
+    image: killrvideo/killrvideo-studio:1.0.0
     ports:
     # The Web UI exposed to our host
     - "9091:9091"
