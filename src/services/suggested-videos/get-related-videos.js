@@ -196,7 +196,9 @@ async function getRelatedVideosWithDseSearch(call) {
   let searchResponse = await doRequest(requestOpts);
 
   // Get the starting index for the next page, then compare against total results available to determine paging state
-  let nextPageStartIdx = searchResponse.response.start + searchResponse.response.docs.length;
+  let nextPageStartIdx = searchResponse.response
+    ? searchResponse.response.start + searchResponse.response.docs.length
+    : 0;
   let pagingState = nextPageStartIdx === searchResponse.numFound
     ? ''
     : nextPageStartIdx.toString();
