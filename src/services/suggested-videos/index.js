@@ -8,12 +8,13 @@ import { getSuggestedForUser } from './get-suggested-for-user';
 const implementation = {
   getRelatedVideos,
   getSuggestedForUser
-}; 
+};
 
 /**
  * Suggested video service that's responsible for generating video suggestions for users and videos.
  */
 export default {
+  name: 'SuggestedVideoService',
   service: SuggestedVideoService.service,
-  implementation 
+  implementation
 };

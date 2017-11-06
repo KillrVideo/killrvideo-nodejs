@@ -10,12 +10,14 @@ const implementation = {
   commentOnVideo,
   getUserComments,
   getVideoComments
-}; 
+};
 
 /**
  * Comments service, responsible for managing comments on videos.
  */
+
 export default {
+  name: 'CommentsService',
   service: CommentsService.service,
-  implementation 
+  implementation
 };

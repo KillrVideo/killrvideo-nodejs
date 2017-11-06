@@ -9,12 +9,13 @@ import handlers from './handlers';
 const implementation = {
   searchVideos,
   getQuerySuggestions
-}; 
+};
 
 /**
  * Search service which allows searching for videos.
  */
 export default {
+  name: 'SearchService',
   service: SearchService.service,
   implementation,
   handlers

@@ -10,12 +10,13 @@ const implementation = {
   rateVideo,
   getRating,
   getUserRating
-}; 
+};
 
 /**
  * Ratings service, responsible for tracking user's rating of videos.
  */
 export default {
+  name: 'RatingsService',
   service: RatingsService.service,
-  implementation 
+  implementation
 };
