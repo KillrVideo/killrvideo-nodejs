@@ -206,13 +206,15 @@ async function getRelatedVideosWithDseSearch(call) {
   // Convert the search response to gRPC response object
   return new GetRelatedVideosResponse({
     videoId: request.videoId,
-    videos: searchResponse.response.docs.map(doc => new SuggestedVideoPreview({
-      videoId: { value: doc.videoid },
-      addedDate: toProtobufTimestamp(new Date(doc.added_date)),
-      name: doc.name,
-      previewImageLocation: doc.preview_image_location,
-      userId: { value: doc.userid }
-    })),
+    videos: searchResponse.response
+      ? searchResponse.response.docs.map(doc => new SuggestedVideoPreview({
+          videoId: { value: doc.videoid },
+          addedDate: toProtobufTimestamp(new Date(doc.added_date)),
+          name: doc.name,
+          previewImageLocation: doc.preview_image_location,
+          userId: { value: doc.userid }
+        }))
+      : [],
     pagingState
   });
 }
