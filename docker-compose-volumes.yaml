@@ -1,8 +1,8 @@
 version: '3'
 
 #
-# docker-compose.yaml
-#   Default compose file for providing basic infrastructure required by KillrVideo
+# docker-compose-volumes.yaml
+#   use this compose file to preserve DSE Cassandra data on a separate volume
 #
 
 services:
@@ -42,4 +42,10 @@ services:
       SERVICE_8983_NAME: dse-search
       SERVICE_8182_NAME: gremlin
       DS_LICENSE: accept
+    volumes:
+      # associate dse-data directory under the directory where we run docker-compose
+      # with the Cassandra data directory on our node
+      # (using relative paths to store at the root directory of the repository which includes
+      # these files, i.e. killrvideo-java or killrvideo-nodejs)
+      - "../../dse-data:/var/lib/cassandra"
 
