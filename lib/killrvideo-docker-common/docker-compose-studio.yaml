@@ -1,8 +1,8 @@
 version: '3'
 
 #
-# docker-compose.yaml
-#   Default compose file for providing basic infrastructure required by KillrVideo
+# docker-compose-studio.yaml
+#   Use this compose file to add DSE Studio to the standard KillrVideo infrastructure configuration
 #
 
 services:
@@ -43,3 +43,14 @@ services:
       SERVICE_8182_NAME: gremlin
       DS_LICENSE: accept
 
+  # One instance of DataStax Studio
+  studio:
+    image: killrvideo/killrvideo-studio:2.0.0
+    ports:
+    # The Web UI exposed to our host
+    - "9091:9091"
+    depends_on:
+    - dse
+    environment:
+      SERVICE_9091_NAME: studio
+      DS_LICENSE: accept
