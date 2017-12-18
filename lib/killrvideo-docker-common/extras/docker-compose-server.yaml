@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 # Other services are specified in .\lib\killrvideo-docker-common\docker-compose.yaml
 # This is a helper docker service used to run the various language versions in a headless state.
