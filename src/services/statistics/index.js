@@ -8,12 +8,13 @@ import { recordPlaybackStarted } from './record-playback-started';
 const implementation = {
   recordPlaybackStarted,
   getNumberOfPlays
-}; 
+};
 
 /**
  * Statistics service that tracks stats for videos.
  */
 export default {
+  name: 'StatisticsService',
   service: StatisticsService.service,
-  implementation 
+  implementation
 };

@@ -196,7 +196,9 @@ async function getRelatedVideosWithDseSearch(call) {
   let searchResponse = await doRequest(requestOpts);
 
   // Get the starting index for the next page, then compare against total results available to determine paging state
-  let nextPageStartIdx = searchResponse.response.start + searchResponse.response.docs.length;
+  let nextPageStartIdx = searchResponse.response
+    ? searchResponse.response.start + searchResponse.response.docs.length
+    : 0;
   let pagingState = nextPageStartIdx === searchResponse.numFound
     ? ''
     : nextPageStartIdx.toString();
@@ -204,13 +206,15 @@ async function getRelatedVideosWithDseSearch(call) {
   // Convert the search response to gRPC response object
   return new GetRelatedVideosResponse({
     videoId: request.videoId,
-    videos: searchResponse.response.docs.map(doc => new SuggestedVideoPreview({
-      videoId: { value: doc.videoid },
-      addedDate: toProtobufTimestamp(new Date(doc.added_date)),
-      name: doc.name,
-      previewImageLocation: doc.preview_image_location,
-      userId: { value: doc.userid }
-    })),
+    videos: searchResponse.response
+      ? searchResponse.response.docs.map(doc => new SuggestedVideoPreview({
+          videoId: { value: doc.videoid },
+          addedDate: toProtobufTimestamp(new Date(doc.added_date)),
+          name: doc.name,
+          previewImageLocation: doc.preview_image_location,
+          userId: { value: doc.userid }
+        }))
+      : [],
     pagingState
   });
 }

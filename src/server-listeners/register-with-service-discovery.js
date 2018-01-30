@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import { registerServiceAsync, removeServiceAsync } from '../common/service-discovery'
 import { withRetries } from '../common/with-retries';
 import config from '../common/config';
+import {serviceNameFromDefinition} from '../services';
 
 function getAppUniqueId() {
   // Use app name and instance number to set a unique id for the app
@@ -30,8 +31,9 @@ export function register(grpcServer) {
 
     // Register each service with etcd
     let startServices = services.map(s => {
-      let registerFn = () => registerServiceAsync(s.name, uniqueId, ipAndPort);
-      return withRetries(registerFn, Infinity, 5, `Could not register ${s.name} in service registry`, false);
+      let name = serviceNameFromDefinition(s);
+      let registerFn = () => registerServiceAsync(name, uniqueId, ipAndPort);
+      return withRetries(registerFn, Infinity, 5, `Could not register ${name} in service registry`, false);
     });
     startStopPromise = Promise.all(startServices).tap(() => { startStopPromise = null; })
   });
@@ -53,8 +55,9 @@ export function remove(grpcServer) {
 
     // Remove each service from etcd
     let stopServices = services.map(s => {
-      let removeFn = () => removeServiceAsync(s.name, uniqueId);
-      return withRetries(removeFn, Infinity, 5, `Could not remove ${s.name} from service registry`, false);
+      let name = serviceNameFromDefinition(s);
+      let removeFn = () => removeServiceAsync(name, uniqueId);
+      return withRetries(removeFn, Infinity, 5, `Could not remove ${name} from service registry`, false);
     });
     startStopPromise = Promise.all(stopServices).tap(() => { startStopPromise = null; });
   });

@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { resolve } from 'path';
 
 // Load environment variables from docker's .env file if present
-dotenv.config({ path: resolve(__dirname, '../../.env'), silent: true });
+dotenv.config({ path: resolve(__dirname, '../../.env')});
 
 // Create config for a local docker environment
 const dockerConf = convict({

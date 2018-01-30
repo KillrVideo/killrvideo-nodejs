@@ -20,7 +20,7 @@ export function getVideo(call, cb) {
   .then(resultSet => {
     let row = resultSet.first();
     if (row === null) {
-      throw new NotFoundError(`A video with id ${request.videoId.value} was not found`);
+      throw new NotFoundError(`A video with id ${call.request.videoId.value} was not found`);
     }
 
     return new GetVideoResponse({

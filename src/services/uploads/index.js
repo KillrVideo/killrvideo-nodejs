@@ -16,12 +16,13 @@ const implementation = {
   getStatusOfVideo(call, cb) {
     cb(new NotImplementedError('Not implemented'));
   }
-}; 
+};
 
 /**
  * Uploads service, that handles processing/re-encoding of user uploaded videos.
  */
 export default {
+  name: 'UploadsService',
   service: UploadsService.service,
-  implementation 
+  implementation
 };
