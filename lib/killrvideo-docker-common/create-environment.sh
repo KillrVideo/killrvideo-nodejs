@@ -33,17 +33,17 @@ if [ -z "$LOOPBACK_IP" ] ; then
     # Create an alias for the loopback adapter so that the Mac and Docker VM can communicate using that IP
     LOOPBACK_IP='10.0.75.1'
     if [ `uname` = "Darwin" ] ; then
-	ALIAS_NAME=lo0
+	LOOPBACK_NAME=lo0
     else
-	ALIAS_NAME=lo:0
+	LOOPBACK_NAME=lo
     fi
-    echo 'We need to create an alias for the loopback adapter ($ALIAS_NAME) using sudo'
+    echo "We need to create an alias for the loopback adapter ($LOOPBACK_NAME) using sudo"
     echo 'so your OS and the Docker VM can communicate. It will be created using'
     echo "IP $LOOPBACK_IP. You will be prompted for your password."
     if [ `uname` = "Darwin" ] ; then
-	sudo ifconfig $ALIAS_NAME alias $LOOPBACK_IP
+	sudo ifconfig $LOOPBACK_NAME alias $LOOPBACK_IP
     else
-	sudo ifconfig $ALIAS_NAME $LOOPBACK_IP/24
+	sudo ifconfig ${LOOPBACK_NAME}:0 $LOOPBACK_IP/24
     fi
 fi
 export LOOPBACK_IP
