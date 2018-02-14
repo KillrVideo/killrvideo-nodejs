@@ -46,6 +46,35 @@ export const services = [
     let value = executeAndLogErrors.bind(undefined, fn);
     Object.defineProperty(impl, fnName, { value });
   });
-  
+
   return serviceDef;
 });
+
+function matchServiceDef(a, b) {
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+
+  if (aKeys.length === bKeys.length) {
+    let index = bKeys.length;
+    while (index--) {
+      let bKey = bKeys[index];
+      if (!a.hasOwnProperty(bKey)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+};
+
+export function serviceNameFromDefinition(serviceDef) {
+  let index = services.length
+  while (index--) {
+    let service = services[index]
+    if (matchServiceDef(serviceDef, service.service)) {
+      return service.name;
+    }
+  }
+  logger.log('error',`failed to find name for serviceDef with keys ${JSON.stringify(Object.keys(serviceDef))}`)
+  return undefined;
+}

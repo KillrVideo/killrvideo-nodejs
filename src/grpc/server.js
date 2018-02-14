@@ -27,7 +27,7 @@ export class GrpcServer extends EventEmitter {
     // Add all available services to the Grpc Server
     this._services.forEach(service => {
       logger.log('debug', `Adding Grpc service for ${service.service.name}`);
-      server.addProtoService(service.service, service.implementation);
+      server.addService(service.service, service.implementation);
     });
 
     // Figure out where to listen
@@ -48,7 +48,7 @@ export class GrpcServer extends EventEmitter {
 
   /**
    * Stop the server, trying to allow all outstanding requests to complete. Returns a Promise
-   * that resolves once stopped. 
+   * that resolves once stopped.
    */
   stopAsync() {
     // Not started?
@@ -56,7 +56,7 @@ export class GrpcServer extends EventEmitter {
 
     logger.log('debug', 'Stopping Grpc server');
 
-    // Stop, then let everyone know we're stopped      
+    // Stop, then let everyone know we're stopped
     return this._stopAsync()
       .then(() => {
         this._emitEvent('stop');
