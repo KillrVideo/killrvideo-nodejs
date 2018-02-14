@@ -16,12 +16,13 @@ const implementation = {
   getVideoPreviews,
   getLatestVideoPreviews,
   getUserVideoPreviews
-}; 
+};
 
 /**
  * Video Catalog Service, responsible for tracking the catalog of videos available for playback.
  */
 export default {
+  name: 'VideoCatalogService',
   service: VideoCatalogService.service,
-  implementation 
+  implementation
 };

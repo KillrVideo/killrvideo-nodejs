@@ -10,12 +10,13 @@ const implementation = {
   createUser,
   verifyCredentials,
   getUserProfile
-}; 
+};
 
 /**
  * User Management Service, responsible for managing/authenticating users.
  */
 export default {
+  name: 'UserManagementService',
   service: UserManagementService.service,
-  implementation 
+  implementation
 };
