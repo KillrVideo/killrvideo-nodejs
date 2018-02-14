@@ -44,6 +44,11 @@ services:
       SERVICE_8983_NAME: dse-search
       SERVICE_8182_NAME: gremlin
       DS_LICENSE: accept
+    # Allow DSE to lock memory with mlock
+    cap_add:
+    - IPC_LOCK
+    ulimits:
+      memlock: -1
 
   # OpsCenter
   opscenter:

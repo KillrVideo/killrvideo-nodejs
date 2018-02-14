@@ -48,4 +48,9 @@ services:
       # (using relative paths to store at the root directory of the repository which includes
       # these files, i.e. killrvideo-java or killrvideo-nodejs)
       - "../../dse-data:/var/lib/cassandra"
+    # Allow DSE to lock memory with mlock
+    cap_add:
+    - IPC_LOCK
+    ulimits:
+      memlock: -1
 
