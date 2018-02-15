@@ -31,7 +31,7 @@ services:
   # configure this as the seed node
   # start with search and graph modes enabled ("-s -g")
   dse:
-    image: killrvideo/killrvideo-dse:4.0.2
+    image: killrvideo/killrvideo-dse:4.0.1
     command: [ -s -g ]
     ports:
     - "9042:9042"
