@@ -27,7 +27,7 @@ services:
     depends_on:
     - etcd
     
-  # DataStax Enterprise with KillrVideo schema and search config
+  # DataStax Enterprise
   # configure this as the seed node
   # start with search and graph modes enabled ("-s -g")
   dse:
@@ -47,3 +47,7 @@ services:
     - IPC_LOCK
     ulimits:
       memlock: -1
+    volumes:
+      # use custom config file with authentication/authorization enabled
+      - "./extras/config-secure:/config"
+
