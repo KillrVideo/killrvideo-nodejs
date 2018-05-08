@@ -27,23 +27,32 @@ services:
     depends_on:
     - etcd
     
-  # DataStax Enterprise with KillrVideo schema and search config
+  # DataStax Enterprise
   # configure this as the seed node
   # start with search and graph modes enabled ("-s -g")
   dse:
-    image: killrvideo/killrvideo-dse:4.1.0
+    image: datastax/dse-server:6.0.0
     command: [ -s -g ]
     ports:
     - "9042:9042"
     - "8983:8983"
     - "8182:8182"
     environment:
-      SERVICE_9042_NAME: cassandra
-      SERVICE_8983_NAME: dse-search
-      SERVICE_8182_NAME: gremlin
       DS_LICENSE: accept
     # Allow DSE to lock memory with mlock
     cap_add:
     - IPC_LOCK
     ulimits:
       memlock: -1
+
+  # Container to load KillrVideo schema and search config into DSE
+  # Provides options to configure secure users as well
+  dse-config:
+    image: killrvideo/killrvideo-dse-config:1.2.0
+    environment:
+      KILLRVIDEO_DOCKER_IP: $KILLRVIDEO_DOCKER_IP
+      KILLRVIDEO_DSE_EXTERNAL_IP: $KILLRVIDEO_DSE_EXTERNAL_IP
+      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
+      KILLRVIDEO_GRAPH_REPLICATION: $KILLRVIDEO_GRAPH_REPLICATION
+    depends_on:
+    - dse
