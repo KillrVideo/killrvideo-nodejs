@@ -7,7 +7,7 @@ import Promise from 'bluebird';
 import config from './common/config';
 import { initCassandraAsync } from './common/cassandra';
 import { logger, setLoggingLevel } from './common/logging';
-import { lookupServiceAsync } from './common/service-discovery';
+import { lookupService } from './common/service-discovery';
 import { subscribeAsync } from './common/message-bus';
 import { GrpcServer } from './grpc/server';
 import { services } from './services';
@@ -45,9 +45,9 @@ function startAsync() {
     // Wait for all subscriptions to finish
     .all()  
     // Find the web UI's host and port
-    .then(() => lookupServiceAsync('web'))
+    .then(() => lookupService('web'))
     // Start the Grpc server to process requests
-    .then(webIpAndPorts => {
+    .then(webIpAndPort => {
       // Create a Grpc server and register all listeners
       logger.log('info', 'Starting all Grpc services');
       
@@ -56,7 +56,7 @@ function startAsync() {
 
       // Start the server and return it
       server.start();
-      logger.log('info', `Open http://${webIpAndPorts[0]} in a web browser to see the UI`);
+      logger.log('info', `Open http://${webIpAndPort} in a web browser to see the UI`);
       logger.log('info', 'KillrVideo has started. Press Ctrl+C to exit.');
       return server;
     })

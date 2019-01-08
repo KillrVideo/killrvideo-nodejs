@@ -75,22 +75,6 @@ const conf = convict({
     env: 'NODE_APP_INSTANCE'
   },
 
-  etcd: {
-    ip: {
-      doc: 'The IP address for etcd to do service discovery',
-      format: 'docker-fallback-ip',
-      default: '${dockerIp}',
-      env: 'KILLRVIDEO_ETCD_IP'
-    },
-
-    port: {
-      doc: 'The port for etcd to do service discovery',
-      format: 'port',
-      default: 2379,
-      env: 'KILLRVIDEO_ETCD_PORT'
-    }
-  },
-
   listen: {
     ip: {
       doc: 'The IP address for Grpc services to listen on',
@@ -110,8 +94,8 @@ const conf = convict({
   broadcast: {
     ip: {
       doc: 'The IP address to broadcast for Grpc services (i.e. register with service discovery)',
-      format: 'docker-fallback-ip',
-      default: '${hostIp}',
+      format: String,
+      default: 'backend',
       env: 'KILLRVIDEO_BROADCAST_IP'
     },
 

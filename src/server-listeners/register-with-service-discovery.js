@@ -1,5 +1,5 @@
 import Promise from 'bluebird';
-import { registerServiceAsync, removeServiceAsync } from '../common/service-discovery'
+import { registerService, removeService } from '../common/service-discovery'
 import { withRetries } from '../common/with-retries';
 import config from '../common/config';
 import {serviceNameFromDefinition} from '../services';
@@ -29,11 +29,11 @@ export function register(grpcServer) {
       startStopPromise.cancel();
     }
 
-    // Register each service with etcd
+    // Register each service
     let startServices = services.map(s => {
       let name = serviceNameFromDefinition(s);
-      let registerFn = () => registerServiceAsync(name, uniqueId, ipAndPort);
-      return withRetries(registerFn, Infinity, 5, `Could not register ${name} in service registry`, false);
+      // let registerFn = () => registerService(name, ipAndPort);
+      return withRetries(() => new Promise(function(resolve, reject) {resolve(registerService(name, ipAndPort))}), Infinity, 5, `Could not register ${name} in service registry`, false);
     });
     startStopPromise = Promise.all(startServices).tap(() => { startStopPromise = null; })
   });
@@ -56,7 +56,7 @@ export function remove(grpcServer) {
     // Remove each service from etcd
     let stopServices = services.map(s => {
       let name = serviceNameFromDefinition(s);
-      let removeFn = () => removeServiceAsync(name, uniqueId);
+      let removeFn = () => removeService(name);
       return withRetries(removeFn, Infinity, 5, `Could not remove ${name} from service registry`, false);
     });
     startStopPromise = Promise.all(stopServices).tap(() => { startStopPromise = null; });

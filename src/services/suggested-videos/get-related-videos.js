@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import rp from 'request-promise';
-import { lookupServiceAsync } from '../../common/service-discovery';
+import { lookupService } from '../../common/service-discovery';
 import { getCassandraClient } from '../../common/cassandra';
 import config from '../../common/config';
 import { toCassandraUuid, toProtobufUuid, toProtobufTimestamp } from '../common/protobuf-conversions';
@@ -144,11 +144,11 @@ let getSearchClientPromise = null;
 
 function getSearchClientAsync() {
   if (getSearchClientPromise === null) {
-    getSearchClientPromise = lookupServiceAsync('dse-search')
+     let searchLocation = lookupService('dse-search')
+     getSearchClientPromise = new Promise (function(resolve, reject){resolve(searchLocation)})
       .then(hostAndPorts => {
-        // Just use the first host:port returned
         return rp.defaults({
-          baseUrl: `http://${hostAndPorts[0]}/solr`
+          baseUrl: `http://${hostAndPorts}/solr`
         });
       })
       .catch(err => {

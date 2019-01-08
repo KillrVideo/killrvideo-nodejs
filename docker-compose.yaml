@@ -2,9 +2,21 @@ version: '3'
 
 # Other services are specified in .\lib\killrvideo-docker-common\docker-compose.yaml
 services:
+  node:
+    build: /Users/aleksandrvolochnev/killrvideo/node
+    depends_on:
+      - dse
+    environment:
+      KILLRVIDEO_ETCD: "etcd:2379"
+      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
+      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
+      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
+      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
+
   # Start the KillrVideo web UI on port 3000
   web:
     image: killrvideo/killrvideo-web:1.2.6
+    #build: /Users/aleksandrvolochnev/killrvideo/web
     ports:
     - "3000:3000"
     depends_on:
@@ -22,12 +34,12 @@ services:
   generator:
     image: killrvideo/killrvideo-generator:1.2.4
     depends_on:
-    - dse
-    - etcd
+      - dse
+      - etcd
     environment:
       KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
-      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
+      KILLRVIDEO_DSE_USERNAME: cassandra
+      KILLRVIDEO_DSE_PASSWORD: cassandra
       NODE_ENV: $NODE_ENV
       KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
       KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL

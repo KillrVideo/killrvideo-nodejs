@@ -20,7 +20,8 @@ services:
   registrator:
     image: gliderlabs/registrator:latest
     # Tell registrator where the etcd HTTP API is and to use the docker VM's IP
-    command: [ -ip, "$KILLRVIDEO_DOCKER_IP", "etcd://etcd:2379/killrvideo/services" ]
+    #command: [ -ip, "$KILLRVIDEO_DOCKER_IP", "etcd://etcd:2379/killrvideo/services" ]
+    command: [ "etcd://etcd:2379/killrvideo/services" ]
     volumes:
     # So registrator can use the docker API to inspect containers
     - "/var/run/docker.sock:/tmp/docker.sock"
@@ -48,7 +49,7 @@ services:
   # Container to load KillrVideo schema and search config into DSE
   # Provides options to configure secure users as well
   dse-config:
-    image: killrvideo/killrvideo-dse-config:1.2.1
+    image: hadesarchitect/killrvideo-dse-config:disable-loopback
     environment:
       KILLRVIDEO_DOCKER_IP: $KILLRVIDEO_DOCKER_IP
       KILLRVIDEO_DSE_EXTERNAL_IP: $KILLRVIDEO_DSE_EXTERNAL_IP
