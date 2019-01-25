@@ -1,59 +1,64 @@
 version: '3'
-
-# Other services are specified in .\lib\killrvideo-docker-common\docker-compose.yaml
 services:
-  node:
-    build: /Users/aleksandrvolochnev/killrvideo/node
+  # NodeJS Backend
+  backend:
+    build: .
+    volumes:
+      - .:/usr/src/app
     depends_on:
       - dse
     environment:
-      KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
-      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
-      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
-      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
+      KILLRVIDEO_LOGGING_LEVEL: debug
 
-  # Start the KillrVideo web UI on port 3000
+  # Datastax Enterprise 
+  dse:
+    image: datastax/dse-server:6.0.0
+    command: [ -s -g ]
+    ports:
+      - "9042:9042"
+      - "8983:8983"
+      - "8182:8182"
+    environment:
+      DS_LICENSE: accept
+    # Allow DSE to lock memory with mlock
+    cap_add:
+      - IPC_LOCK
+    ulimits:
+      memlock: -1
+
+  # Frontend
   web:
-    image: killrvideo/killrvideo-web:1.2.6
-    #build: /Users/aleksandrvolochnev/killrvideo/web
+    image: killrvideo/killrvideo-web:3.0.0-rc1
     ports:
     - "3000:3000"
     depends_on:
     - dse
-    - etcd
     environment:
-      SERVICE_3000_NAME: web
-      KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
-      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
-      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
-      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
+      KILLRVIDEO_LOGGING_LEVEL: debug
 
-  # The sample data generator
-  generator:
-    image: killrvideo/killrvideo-generator:1.2.4
+  # DSE Configurator to setup DSE
+  dse-config:
+    image: killrvideo/killrvideo-dse-config:2.2.1
+    environment:
+      KILLRVIDEO_SERVICE_DISCOVERY_DISABLED: 'true'
     depends_on:
       - dse
-      - etcd
-    environment:
-      KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: cassandra
-      KILLRVIDEO_DSE_PASSWORD: cassandra
-      NODE_ENV: $NODE_ENV
-      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
-      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
 
-  # One instance of DataStax Studio
+  # Sample Data Generator
+  generator:
+    image: killrvideo/killrvideo-generator:3.0.0-rc4
+    depends_on:
+      - dse
+      - backend
+    environment:
+      KILLRVIDEO_LOGGING_LEVEL: debug
+
+  # DataStax Studio
   studio:
     image: killrvideo/killrvideo-studio:2.0.0
     ports:
-    # The Web UI exposed to our host
-    - "9091:9091"
+      - "9091:9091"
     depends_on:
-    - dse
+      - dse
     environment:
-      SERVICE_9091_NAME: studio
       DS_LICENSE: accept
-
-
