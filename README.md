@@ -6,7 +6,7 @@ services. Learn more at [killrvideo.github.io][killrvideo].
 
 ## Running Locally using Docker
 
-Development should be pretty straight-forward if you are familiar with docker and docker-compose
+Running should be pretty straight-forward if you are familiar with docker and docker-compose
 
 ```
 > docker-compose pull
