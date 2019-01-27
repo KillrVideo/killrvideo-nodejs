@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import rp from 'request-promise';
 import config from '../../common/config';
-import { lookupService } from '../../common/service-discovery';
+import { lookupServiceAsync } from '../../common/service-discovery';
 import { getCassandraClient } from '../../common/cassandra';
 import { NotImplementedError } from '../common/grpc-errors';
 import { GetQuerySuggestionsResponse } from './protos';
@@ -44,7 +44,7 @@ let getSearchClientPromise = null;
 
 function getSearchClientAsync() {
   if (getSearchClientPromise === null) {
-    getSearchClientPromise = lookupService('dse-search')
+    getSearchClientPromise = lookupServiceAsync('dse-search')
       .then(hostAndPorts => {
         // Just use the first host:port returned
         return rp.defaults({
@@ -90,4 +90,3 @@ async function getQuerySuggestionsWithDseSearch(call) {
     suggestions: searchResponse.suggest.searchSuggester[request.query].suggestions.map(s => s.term)
   });
 }
-

@@ -1,32 +1,31 @@
 import { logger } from './logging';
+import Promise from 'bluebird';
+import { ExtendableError } from './extendable-error';
 import config from './config';
 
-let registry = {
-  'dse-search': 'dse:8983',
-  'web': 'web:3000',
-  'cassandra': 'dse:9042'
+let registry = config.get('services');
+
+/**
+ * Error thrown when a service can't be found
+ */
+export class ServiceNotFoundError extends ExtendableError {
+  constructor(serviceName) {
+    super(`Could not find service ${serviceName}`);
+  }
 };
 
 /**
- * Looks up a service by name. Returns host:port string value.
+ * Looks up a service with a given name. Returns a Promise with an array of strings in the format of 'ip:port' or throws ServiceNotFoundError.
  */
-export function lookupService(serviceName) {
-  logger.log('debug', `Found service ${serviceName} at ${registry[serviceName]}`);
-  return registry[serviceName];
-};
+export function lookupServiceAsync(serviceName) {
+  logger.log('verbose', `Looking up service ${serviceName}`);
 
-/**
- * Registers a service at the host and port specified.
- */
-export function registerService(serviceName, hostAndPort) {
-  registry[serviceName] = hostAndPort;
-  logger.log('debug', `Registered service ${serviceName} at ${hostAndPort}`);
-};
+  if (!(serviceName in registry)) {
+    logger.log('error', `Found no service ${serviceName}`);
+    throw new ServiceNotFoundError(serviceName);
+  }
 
-/**
- * Removes a service from the registry.
- */
-export function removeService(serviceName) {
-  delete registry[serviceName];
-  logger.log('debug', `Removed service ${serviceName}`);
+  logger.log('verbose', `Found service ${serviceName} at ${registry[serviceName]}`);
+
+  return new Promise (function(resolve, reject){resolve(registry[serviceName])});
 };

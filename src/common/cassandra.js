@@ -1,6 +1,6 @@
 import Promise from 'bluebird';
 import { Client, types as CassandraTypes } from 'cassandra-driver';
-import { lookupService } from './service-discovery';
+import { lookupServiceAsync } from './service-discovery';
 import { withRetries } from './with-retries';
 import { logger } from './logging';
 
@@ -9,10 +9,12 @@ import { logger } from './logging';
  * specified. Returns a Promise of the created client.
  */
 function createClientAsync(keyspace, queryOptions) {
-  let client = new Client({ 'contactPoints': [lookupService('cassandra')], keyspace, queryOptions });
-  Promise.promisifyAll(client); // This creates "Async" versions of methods that return promises
-  
-  return new Promise (function(resolve, reject){resolve(client)});
+  return lookupServiceAsync('cassandra')
+    .then(contactPoints => {
+      let client = new Client({ contactPoints, keyspace, queryOptions });
+      Promise.promisifyAll(client); // This creates "Async" versions of methods that return promises
+      return client;
+    });
 }
 
 // A singleton client instance to be reused throughout the application
