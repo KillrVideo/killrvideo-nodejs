@@ -15,7 +15,7 @@ script:
 after_success:
 - test -z $TRAVIS_TAG && travis_terminate 0
 - docker tag ${TRAVIS_COMMIT} killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
-- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 - docker push killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
 
 env:
