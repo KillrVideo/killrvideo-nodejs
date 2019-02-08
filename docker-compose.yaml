@@ -12,7 +12,7 @@ services:
 
   # Datastax Enterprise 
   dse:
-    image: datastax/dse-server:6.0.0
+    image: datastax/dse-server:6.7.0
     command: [ -s -g ]
     ports:
       - "9042:9042"
@@ -38,7 +38,7 @@ services:
 
   # DSE Configurator to setup DSE
   dse-config:
-    image: killrvideo/killrvideo-dse-config:2.2.1
+    image: killrvideo/killrvideo-dse-config:2.2.2-rc2
     environment:
       KILLRVIDEO_SERVICE_DISCOVERY_DISABLED: 'true'
     depends_on:
@@ -55,7 +55,7 @@ services:
 
   # DataStax Studio
   studio:
-    image: killrvideo/killrvideo-studio:2.0.0
+    image: datastax/dse-studio:6.7.0
     ports:
       - "9091:9091"
     depends_on:
