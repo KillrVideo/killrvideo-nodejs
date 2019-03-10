@@ -7,8 +7,9 @@ services:
       - .:/usr/src/app
     depends_on:
       - dse
+    env_file: ./killrvideo.env
     environment:
-      KILLRVIDEO_LOGGING_LEVEL: debug
+      NODE_ENV: development
 
   # Datastax Enterprise 
   dse:
@@ -18,6 +19,7 @@ services:
       - "9042:9042"
       - "8983:8983"
       - "8182:8182"
+    env_file: ./killrvideo.env
     environment:
       DS_LICENSE: accept
     # Allow DSE to lock memory with mlock
@@ -29,29 +31,26 @@ services:
   # Frontend
   web:
     image: killrvideo/killrvideo-web:3.0.0-rc1
+    env_file: ./killrvideo.env
     ports:
-    - "3000:3000"
+      - "3000:3000"
     depends_on:
-    - dse
-    environment:
-      KILLRVIDEO_LOGGING_LEVEL: debug
+      - dse
 
   # DSE Configurator to setup DSE
   dse-config:
-    image: killrvideo/killrvideo-dse-config:2.2.2-rc2
-    environment:
-      KILLRVIDEO_SERVICE_DISCOVERY_DISABLED: 'true'
+    image: killrvideo/killrvideo-dse-config:3.0.0-rc1
+    env_file: ./killrvideo.env
     depends_on:
       - dse
 
   # Sample Data Generator
   generator:
     image: killrvideo/killrvideo-generator:3.0.0-rc4
+    env_file: ./killrvideo.env
     depends_on:
       - dse
       - backend
-    environment:
-      KILLRVIDEO_LOGGING_LEVEL: debug
 
   # DataStax Studio
   studio:
