@@ -37,7 +37,7 @@ export function getCassandraClient() {
  * method in this module. Returns a Promise.
  */
 export function initCassandraAsync() {
-  logger.log('info', 'Initializing cassandra');
+  logger.log('info', 'Initializing cassandra...');
 
   // Create the client with some default query options
   return createClientAsync('killrvideo', {
@@ -46,7 +46,25 @@ export function initCassandraAsync() {
     })
     .tap(client => {
       // Wait until Cassandra is ready and we can connect (could be delayed if starting up for 1st time)
-      return withRetries(() => client.connectAsync(), 10, 10, 'Error connecting to cassandra', false);
+      return withRetries(() => client.connectAsync(), 10, 10, 'Connecting to cassandra...', false, true);
+    })
+    .tap(client => {
+      // Wait until Cassandra is bootstrapped and we can use it (dse-config needs time to initialise it)
+      return withRetries(() =>  
+        new Promise (
+          function(resolve, reject){
+            client.execute(
+              'SELECT keyspace_name FROM system_schema.keyspaces WHERE keyspace_name=\'kv_init_done\';', [], [],
+              function(err, result) {
+                if (err || result.rowLength != 1) { 
+                  reject(new Error('DB is not initialised'));
+                }
+                resolve();
+              }
+            )
+          }
+        ), 10, 10, 'Waiting for dse-config to bootstrap cassandra...', false, false
+      );
     })
     .tap(client => {
       // Save client instance for reuse everywhere and log
