@@ -24,7 +24,9 @@ export function getUserProfile(call, cb) {
     let client = getCassandraClient();
     return Promise.map(request.userIds, userId => {
       let uid = toCassandraUuid(userId);
-      return client.executeAsync('SELECT userid, firstname, lastname, email FROM users WHERE userid = ?', [ uid ]);
+      return client.executeAsync(
+        //INSERT QUERY HERE
+        );
     });
   })
   .then(resultSets => {

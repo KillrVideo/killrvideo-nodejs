@@ -26,7 +26,7 @@ export function createUser(call, cb) {
         toCassandraUuid(request.userId)
       ];
       return client.executeAsync(
-        'INSERT INTO user_credentials (email, password, userid) VALUES (?, ?, ?) IF NOT EXISTS', insertParams);
+        //INSERT QUERY HERE
     })
     .then(resultSet => {
       let row = resultSet.first();
@@ -54,8 +54,8 @@ export function createUser(call, cb) {
         createdDate
       ];
       return client.executeAsync(
-        'INSERT INTO users (userid, firstname, lastname, email, created_date) VALUES (?, ?, ?, ?, ?)', 
-        insertParams, insertOpts).return(createdDate);
+        //INSERT QUERY HERE
+        ).return(createdDate);
     })
     .then(createdDate => {
       // Publish an event to tell the world about the new user
