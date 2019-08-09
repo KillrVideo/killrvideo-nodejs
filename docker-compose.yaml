@@ -1,47 +1,63 @@
 version: '3'
-
-# Other services are specified in .\lib\killrvideo-docker-common\docker-compose.yaml
 services:
-  # Start the KillrVideo web UI on port 3000
-  web:
-    image: killrvideo/killrvideo-web:1.2.6
-    ports:
-    - "3000:3000"
+  # NodeJS Backend
+  backend:
+    build: .
+    volumes:
+      - .:/usr/src/app
     depends_on:
-    - dse
-    - etcd
+      - dse
+    env_file: ./killrvideo.env
     environment:
-      SERVICE_3000_NAME: web
-      KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
-      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
-      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
-      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
+      NODE_ENV: development
 
-  # The sample data generator
-  generator:
-    image: killrvideo/killrvideo-generator:1.2.4
-    depends_on:
-    - dse
-    - etcd
-    environment:
-      KILLRVIDEO_ETCD: "etcd:2379"
-      KILLRVIDEO_DSE_USERNAME: $KILLRVIDEO_DSE_USERNAME
-      KILLRVIDEO_DSE_PASSWORD: $KILLRVIDEO_DSE_PASSWORD
-      NODE_ENV: $NODE_ENV
-      KILLRVIDEO_CASSANDRA_REPLICATION: $KILLRVIDEO_CASSANDRA_REPLICATION
-      KILLRVIDEO_LOGGING_LEVEL: $KILLRVIDEO_LOGGING_LEVEL
-
-  # One instance of DataStax Studio
-  studio:
-    image: killrvideo/killrvideo-studio:2.0.0
+  # Datastax Enterprise 
+  dse:
+    image: datastax/dse-server:6.7.0
+    command: [ -s -g ]
     ports:
-    # The Web UI exposed to our host
-    - "9091:9091"
-    depends_on:
-    - dse
+      - "9042:9042"
+      - "8983:8983"
+      - "8182:8182"
+    env_file: ./killrvideo.env
     environment:
-      SERVICE_9091_NAME: studio
       DS_LICENSE: accept
+    # Allow DSE to lock memory with mlock
+    cap_add:
+      - IPC_LOCK
+    ulimits:
+      memlock: -1
 
+  # Frontend
+  web:
+    image: killrvideo/killrvideo-web:3.0.0-rc1
+    env_file: ./killrvideo.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dse
 
+  # DSE Configurator to setup DSE
+  dse-config:
+    image: killrvideo/killrvideo-dse-config:3.0.0-rc1
+    env_file: ./killrvideo.env
+    depends_on:
+      - dse
+
+  # Sample Data Generator
+  generator:
+    image: killrvideo/killrvideo-generator:3.0.0-rc4
+    env_file: ./killrvideo.env
+    depends_on:
+      - dse
+      - backend
+
+  # DataStax Studio
+  studio:
+    image: datastax/dse-studio:6.7.0
+    ports:
+      - "9091:9091"
+    depends_on:
+      - dse
+    environment:
+      DS_LICENSE: accept

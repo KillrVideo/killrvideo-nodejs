@@ -31,7 +31,6 @@
     "dotenv": "^4.0.0",
     "grpc": "^1.7.1",
     "moment": "^2.19.1",
-    "node-etcd": "^5.1.0",
     "regenerator-runtime": "^0.11.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
