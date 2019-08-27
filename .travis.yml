@@ -17,6 +17,7 @@ after_success:
 - docker tag ${TRAVIS_COMMIT} killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
 - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
 - docker push killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
+- "[ \"$(git tag --sort=-v:refname | grep -P \"^\\d+.\\d+.\\d+$\" | head -n1)\" == \"$TRAVIS_TAG\" ] &&  { docker tag ${TRAVIS_COMMIT} killrvideo/killrvideo-nodejs:latest; docker push killrvideo/killrvideo-nodejs:latest; }"
 
 env:
   global:
@@ -29,3 +30,4 @@ notifications:
   slack:
     rooms:
       secure: Eh/HI7+7KAUlzFpl9ViMUpExt4YXXWa5rEcwW3h/zIAo/UVghstuoCnk/CWbY/4SyrBeFO7iGcAc396GrBHbkJA25Iz+z3M7VYI/v22di1P8DeWguLNxbe1/wwCAbneYlxLbpPmkOKuFVho5NWDF1QgGszWONRM6DyiFiPlMF84nUcZEHP9exRELGqY64Cg3gfaKMXBn+QSZ5dzNH5cgVrWsGmPSeVBSTWZnZUYHWFKTbgnkY0bs1aHQefRAvl2CCZY/eFPJtcM9oIyIOiuX0NVz7h971tFJdJ9zpTesmaSVOjhCT00mUEJnPPI+zFJxLyIiXHjwROZXzCZL3J21DuWAb3+3ndVe6f47ao/4VNR/Q1TNJGIw5ewkA7RHHW9fegF27OzF+ddfd88ExFvBh1PvJXlAO3c050/2dIqDw7ovhIZWHFchUjSaoV6o5mkgv8/rEu76o3cpdAa78kgZ2tqzDQSquIY55eyHY1vDRusLYii5QZkXzblN9Hm/VvWuM//X99XtoFfnloeLcARWu6ze0fnsBeexK6iQMuUqseLZTjF3tnFqVe2cArA7Swwkh77fRWT3jm35FX1SHaT/kecsMiPY/E7sBfFGHjHVqSfEwMYXhJ6O3aur0UssB+UpuzWu+yBCkf7TienwzimXMrvOGnE++dSOxx6mXRaJBhI=
+      
