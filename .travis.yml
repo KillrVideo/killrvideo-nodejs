@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- "8"
+
+# Sudo required for doing docker build
+sudo: required
+services:
+- docker
+
+# Build the app and a docker image
+script:
+- docker build -t ${TRAVIS_COMMIT} .
+
+# If successful, see if we need to publish also
+after_success:
+- test -z $TRAVIS_TAG && travis_terminate 0
+- docker tag ${TRAVIS_COMMIT} killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
+- echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+- docker push killrvideo/killrvideo-nodejs:${TRAVIS_TAG}
+
+env:
+  global:
+  # DOCKER_USER
+  - secure: hL9GzKnAuHP130bLzB1nK9eF6bfPD4yFdQ1IdRRp7QDZ+AJ2MUw483w5Uacw6/VNk+KlItO9ySxkAI8gaBcxjxcp+TmFkmD0o4rRQixCoZiqlNeTCMmkx5J6KffNALiFBFPjOvVNXLEYh6lbyIsPJR0/eHGlhCbfpx9Ok9PxzVV4AtNNXVcqCl4hZFWPU8OX7nL0pyQ86MD1WiC/1nfTaE/9zaZ8M/qJhv558KmsSXnFN1eGrwVJLt8XPbZ5aKEvJq3cngwVJ3/hmMQnA6ScgANZFbFrDZo9gDmQLDAbGzQ4mg1wpmvdCGB9HEo14o+ZK3utmnURZDGLHcbgKitIp7fd+FyIktxF3h+hYm7yMV/P67ixLXWxay9F0XXkKF1CPhRU+uEijcWQY/txUItvfHJtDGQbHhChUPmzv2eTQD5QoevFByZ6c3ekQew6hgCPaOsV2FspQQ+XVtdjiiOzmWzeFux2Obc46K85BSyeEp9SjuTJ0772dFBZjWn9UP+M5B8THs4BNPhkSVhceHQBvv65H8DZYEazue0aJYwJhMd1qx5tq/3dXItyDVqxCj0J0LFI4TsFbSf4R+snYOxjc2dkpO1l9aZyLNBTbRn//MTki8o/tdIjAzNYKKWHHBWCYN7OU4Ej4t7XI/SKs3Wf131ebqLlTYU0ppJD7KQUvCU=
+  # DOCKER_PASS
+  - secure: hxakhOfACkkXcGc5T9cT0+a+ICw6X2ybsOXzJsgdju4QbdP0nD2iBSZCypDzfdzlF/y83yJGcSznegMega37ABomPd8BF04IJTY1ZSvfj8LiUiLLfo/YSsz68r/X1G/AxVmS/7x9x5xaCPMnCHaH2jK5Qiogawzlqgqw/h3EAQlnJyKdjwwmFpATUAuRJidQ/95pn4KYvERg3eZ7/DzqbAO4IRjSuxHRNqDsHXDR4xlBxXAwqt0SE9qfr8rIbuA264vwStltPi4RDfTWWBooxFTGWHpu7rS/N1xEg7+48Il0zckVqmbwMJeAfl8abXhqK5RRrpv77icHeqxi5bev/SL28PnNOhj5gXn6a4/1/JPuhzmKp1omNtlJsjjZhs7YidSOVQ2nEJjDoeQ9/d+Z+g6DosnkDbiS7+ijvIPD9SlRbyUlf7Z3wD8Hf91/fUgkaUoIVkBUFvW8i0fArfcWSIQErvixIGhj41yNOwIAheUFM4Y39NsuilJZZmqZ2Zh0/9AHUiY4fA7C6CajFC06CpjUCpDhb3m0uy1vJcUiG7Y3J6iTrRzaW8eqPnGBQcVTS7/dXPj3WtEP/xOF93sYeZMKE7hk489WAUJNLV9kmasSaVTzbu80kfM5Ml9m675dN3ztUAhaAPT0IqHnycngMBKe2Y7+EDalsDBsffOpO0k=

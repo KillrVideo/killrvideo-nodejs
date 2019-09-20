@@ -4,14 +4,15 @@ A reference application for Node.js developers looking to learn more about using
 [Apache Cassandra][cassandra] and [DataStax Enterprise][dse] in their applications and 
 services. Learn more at [killrvideo.github.io][killrvideo].
 
-## Running Locally
+## Running Locally using Docker
 
-Use these guides to get started running KillrVideo locally on your development machine:
+Running should be pretty straight-forward if you are familiar with docker and docker-compose
 
-* [Getting Started with KillrVideo][getting-started]: Follow this to setup common dependencies
-like Docker.
-* [Getting Started with Node.js][getting-started-node]: Follow this to get this Node.js code 
-running.
+```
+> docker-compose pull
+> docker-compose build
+> docker-compose up -d
+```
 
 ## Contributing, Requests for More Examples
 

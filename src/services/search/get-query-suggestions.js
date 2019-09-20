@@ -90,4 +90,3 @@ async function getQuerySuggestionsWithDseSearch(call) {
     suggestions: searchResponse.suggest.searchSuggester[request.query].suggestions.map(s => s.term)
   });
 }
-

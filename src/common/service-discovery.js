@@ -1,68 +1,31 @@
-import Promise from 'bluebird';
-import Etcd from 'node-etcd';
 import { logger } from './logging';
+import Promise from 'bluebird';
+import { ExtendableError } from './extendable-error';
 import config from './config';
 
-// Reuse a singleton instance of the etcd client for all operations
-let etcdClient = null;
+let registry = config.get('services');
 
 /**
- * Get the etcd client.
+ * Error thrown when a service can't be found
  */
-function getEtcdClient() {
-  if (etcdClient !== null) {
-    return etcdClient;
+export class ServiceNotFoundError extends ExtendableError {
+  constructor(serviceName) {
+    super(`Could not find service ${serviceName}`);
   }
-
-  let etcdConfig = config.get('etcd');
-  logger.log('debug', `Using etcd at ${etcdConfig.ip}:${etcdConfig.port} for service discovery`);
-  
-  let client = new Etcd(`http://${etcdConfig.ip}:${etcdConfig.port}`);
-  Promise.promisifyAll(client);
-  etcdClient = client;
-  return etcdClient;
-}
+};
 
 /**
- * Looks up a service by name. Returns a Promise that resolves to an array of host:port string values.
+ * Looks up a service with a given name. Returns a Promise with an array of strings in the format of 'ip:port' or throws ServiceNotFoundError.
  */
 export function lookupServiceAsync(serviceName) {
-  return Promise.try(getEtcdClient)
-    .then(client => {
-      return client.getAsync(`/killrvideo/services/${serviceName}`);
-    })
-    .then(response => {
-      return response.node.nodes.map(node => node.value);
-    })
-    .tap(values => {
-      logger.log('debug', `Found service ${serviceName} at ${JSON.stringify(values)}`);
-    });
-};
+  logger.log('verbose', `Looking up service ${serviceName}`);
 
-/**
- * Registers a service at the host and port specified.
- */
-export function registerServiceAsync(serviceName, uniqueId, hostAndPort) {
-  let key = `/killrvideo/services/${serviceName}/${uniqueId}`;
-  return Promise.try(getEtcdClient)
-    .then(client => {
-      return client.setAsync(key, hostAndPort);
-    })
-    .tap(() => {
-      logger.log('debug', `Registered service ${serviceName}, instance ${uniqueId} at ${hostAndPort}`);
-    });
-};
+  if (!(serviceName in registry)) {
+    logger.log('error', `Found no service ${serviceName}`);
+    throw new ServiceNotFoundError(serviceName);
+  }
 
-/**
- * Removes a service from the registry.
- */
-export function removeServiceAsync(serviceName, uniqueId) {
-  let key = `/killrvideo/services/${serviceName}/${uniqueId}`;
-  return Promise.try(getEtcdClient)
-    .then(client => {
-      return client.delAsync(key);
-    })
-    .tap(() => {
-      logger.log('debug', `Removed service ${serviceName}, instance ${uniqueId}`);
-    });
+  logger.log('verbose', `Found service ${serviceName} at ${registry[serviceName]}`);
+
+  return new Promise (function(resolve, reject){resolve(registry[serviceName])});
 };
