@@ -18,7 +18,7 @@ export function createUser(call, cb) {
     // Hash the password provided
     return createHashAsync(request.password)
     .then(passwordHash => {
-        // Insert the user credentials using a Lighweight Transactions (will fail if there is already a user
+        // Insert the user credentials using a Lighweight Transaction (will fail if there is already a user
         // with the requested email address)
         let insertParams = [
             request.email,
