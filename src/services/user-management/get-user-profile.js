@@ -24,9 +24,7 @@ export function getUserProfile(call, cb) {
     let client = getCassandraClient();
     return Promise.map(request.userIds, userId => {
       let uid = toCassandraUuid(userId);
-      return client.executeAsync(
-        //INSERT QUERY HERE
-        );
+      return client.executeAsync('/*INSERT QUERY HERE*/', [ uid ]);
     });
   })
   .then(resultSets => {

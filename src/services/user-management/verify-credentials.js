@@ -15,9 +15,7 @@ export function verifyCredentials(call, cb) {
   // Find the user in Cassandra
   let getUser = Promise.try(() => {
     let client = getCassandraClient();
-    return client.executeAsync(
-      //INSERT QUERY HERE
-      );
+    return client.executeAsync('/*INSERT QUERY HERE*/', [ request.email ]);
   })
   .then(resultSet => resultSet.first());
 

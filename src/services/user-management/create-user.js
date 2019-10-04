@@ -25,9 +25,7 @@ export function createUser(call, cb) {
             passwordHash,
             toCassandraUuid(request.userId)
         ];
-        return client.executeAsync(
-            //INSERT QUERY HERE
-        )
+        return client.executeAsync('/*INSERT QUERY HERE*/', insertParams);
     })
     .then(resultSet => {
         let row = resultSet.first();
@@ -53,9 +51,7 @@ export function createUser(call, cb) {
             request.email,
             createdDate
         ];
-        return client.executeAsync(
-            //INSERT QUERY HERE
-        ).return(createdDate);
+        return client.executeAsync('/*INSERT QUERY HERE*/', insertParams, insertOpts).return(createdDate);
     })
     .then(createdDate => {
         // Publish an event to tell the world about the new user
