@@ -26,9 +26,10 @@
   "dependencies": {
     "async": "^2.5.0",
     "bluebird": "^3.5.1",
-    "cassandra-driver": "^3.3.0",
+    "cassandra-driver": "https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/nodejs-driver/cassandra-driver-4.2.0-dbaas.2-e09de4d.tgz",
     "convict": "^4.0.1",
     "dotenv": "^4.0.0",
+    "dse-driver": "https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/nodejs-dse-driver/dse-driver-2.2.0-dbaas.2-2ea6f96.tgz",
     "grpc": "^1.7.1",
     "moment": "^2.19.1",
     "regenerator-runtime": "^0.11.0",

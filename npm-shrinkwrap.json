@@ -4,6 +4,21 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
+    "@types/long": {
+      "version": "4.0.0",
+      "resolved": "https://registry.npmjs.org/@types/long/-/long-4.0.0.tgz",
+      "integrity": "sha512-1w52Nyx4Gq47uuu0EVcsHBxZFJgurQ+rTKS3qMHxR1GY2T8c2AJYd6vZoZ9q1rupaDjU0yT+Jc2XTyXkjeMA+Q=="
+    },
+    "@types/node": {
+      "version": "12.11.2",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-12.11.2.tgz",
+      "integrity": "sha512-dsfE4BHJkLQW+reOS6b17xhZ/6FB1rB8eRRvO08nn5o+voxf3i74tuyFWNH6djdfgX7Sm5s6LD8t6mJug4dpDw=="
+    },
+    "adm-zip": {
+      "version": "0.4.13",
+      "resolved": "https://registry.npmjs.org/adm-zip/-/adm-zip-0.4.13.tgz",
+      "integrity": "sha512-fERNJX8sOXfel6qCBCMPvZLzENBEhZTzKqg6vrOW5pvoEaQuJhRU4ndTAh6lHOxn1I6jnz2NHra56ZODM751uw=="
+    },
     "ajv": {
       "version": "5.3.0",
       "resolved": "https://registry.npmjs.org/ajv/-/ajv-5.3.0.tgz",
@@ -2131,10 +2146,12 @@
       "dev": true
     },
     "cassandra-driver": {
-      "version": "3.3.0",
-      "resolved": "https://registry.npmjs.org/cassandra-driver/-/cassandra-driver-3.3.0.tgz",
-      "integrity": "sha1-ek0no2Tjm9El5LRWTTDDYUXXY14=",
+      "version": "https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/nodejs-driver/cassandra-driver-4.2.0-dbaas.2-e09de4d.tgz",
+      "integrity": "sha512-lhIsr2lHh3d6Scv5+UphdbrkHkk4YNExrLc2R2mqpY+WBGxKdOZ52B9Q7RK+38anQY/haXq7JZbJlIGjh6sFmQ==",
       "requires": {
+        "@types/long": "^4.0.0",
+        "@types/node": ">=4",
+        "adm-zip": "^0.4.13",
         "long": "^2.2.0"
       }
     },
@@ -2339,6 +2356,16 @@
       "version": "4.0.0",
       "resolved": "https://registry.npmjs.org/dotenv/-/dotenv-4.0.0.tgz",
       "integrity": "sha1-hk7xN5rO1Vzm+V3r7NzhefegzR0="
+    },
+    "dse-driver": {
+      "version": "https://datastax.artifactoryonline.com/datastax/datastax-public-releases-local/nodejs-dse-driver/dse-driver-2.2.0-dbaas.2-2ea6f96.tgz",
+      "integrity": "sha512-c/pngD+f8C5k7VdYfREjHJh+GV8QGgb4bVsp12N7tjF7Am2eSipp2rnuvNRkV87ZUoLWv0YFmyJ08TmN3PR0sA==",
+      "requires": {
+        "@types/long": "^4.0.0",
+        "@types/node": ">=4",
+        "adm-zip": "^0.4.13",
+        "long": "^2.2.0"
+      }
     },
     "duplexer": {
       "version": "0.1.1",
@@ -2639,7 +2666,6 @@
           "version": "0.0.9",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "inherits": "~2.0.0"
           }
@@ -2648,7 +2674,6 @@
           "version": "2.10.1",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "hoek": "2.x.x"
           }
@@ -2666,8 +2691,7 @@
         "buffer-shims": {
           "version": "1.0.0",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "caseless": {
           "version": "0.12.0",
@@ -2684,8 +2708,7 @@
         "code-point-at": {
           "version": "1.1.0",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "combined-stream": {
           "version": "1.0.5",
@@ -2705,14 +2728,12 @@
         "console-control-strings": {
           "version": "1.1.0",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "core-util-is": {
           "version": "1.0.2",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "cryptiles": {
           "version": "2.0.5",
@@ -2785,8 +2806,7 @@
         "extsprintf": {
           "version": "1.0.2",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "forever-agent": {
           "version": "0.6.1",
@@ -2957,7 +2977,6 @@
           "version": "1.0.0",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "number-is-nan": "1.0.1"
           }
@@ -2971,8 +2990,7 @@
         "isarray": {
           "version": "1.0.0",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "isstream": {
           "version": "0.1.2",
@@ -3186,8 +3204,7 @@
         "process-nextick-args": {
           "version": "1.0.7",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "punycode": {
           "version": "1.4.1",
@@ -3225,7 +3242,6 @@
           "version": "2.2.9",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "buffer-shims": "~1.0.0",
             "core-util-is": "~1.0.0",
@@ -3277,8 +3293,7 @@
         "safe-buffer": {
           "version": "5.0.1",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "semver": {
           "version": "5.3.0",
@@ -3336,7 +3351,6 @@
           "version": "1.0.2",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "code-point-at": "^1.0.0",
             "is-fullwidth-code-point": "^1.0.0",
@@ -3347,7 +3361,6 @@
           "version": "1.0.1",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "safe-buffer": "^5.0.1"
           }
@@ -3376,7 +3389,6 @@
           "version": "2.2.1",
           "bundled": true,
           "dev": true,
-          "optional": true,
           "requires": {
             "block-stream": "*",
             "fstream": "^1.0.2",
@@ -3432,8 +3444,7 @@
         "util-deprecate": {
           "version": "1.0.2",
           "bundled": true,
-          "dev": true,
-          "optional": true
+          "dev": true
         },
         "uuid": {
           "version": "3.0.1",
