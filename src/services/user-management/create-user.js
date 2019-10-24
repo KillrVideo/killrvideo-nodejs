@@ -26,7 +26,7 @@ export function createUser(call, cb) {
             toCassandraUuid(request.userId)
         ];
         return client.executeAsync(
-            'INSERT INTO killrvideo.user_credentials (email, password, userid) VALUES (?,?,?) IF NOT EXISTS',
+            "TODO: PLACE YOUR CQL HERE",
             insertParams);
     })
     .then(resultSet => {
@@ -54,7 +54,7 @@ export function createUser(call, cb) {
             createdDate
         ];
         return client.executeAsync(
-            'INSERT INTO killrvideo.users (userid, firstname, lastname, email, created_date) VALUES (?,?,?,?,?) IF NOT EXISTS',
+            "TODO: PLACE YOUR CQL HERE",
             insertParams, insertOpts).return(createdDate);
     })
     .then(createdDate => {
