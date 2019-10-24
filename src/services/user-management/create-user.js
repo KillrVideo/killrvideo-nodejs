@@ -54,7 +54,7 @@ export function createUser(call, cb) {
             createdDate
         ];
         return client.executeAsync(
-            'INSERT INTO killrvideo.user_credentials (userid, firstname, lastname, email, created_date) VALUES (?,?,?,?,?) IF NOT EXISTS',
+            'INSERT INTO killrvideo.users (userid, firstname, lastname, email, created_date) VALUES (?,?,?,?,?) IF NOT EXISTS',
             insertParams, insertOpts).return(createdDate);
     })
     .then(createdDate => {
