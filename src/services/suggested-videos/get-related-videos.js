@@ -60,7 +60,7 @@ async function getRelatedVideosByTag(call) {
 
   // Get tags for the given video
   let client = getCassandraClient();
-  let tagsResultSet = await client.executeAsync('SELECT tags FROM videos WHERE videoid = ?', [ videoId ]);
+  let tagsResultSet = await client.executeAsync('SELECT tags FROM killrvideo.videos WHERE videoid = ?', [ videoId ]);
 
   // Make sure we have tags
   let tagRow = tagsResultSet.first();
@@ -83,7 +83,7 @@ async function getRelatedVideosByTag(call) {
   let videoCount = 0;
   for (let i = 0; i < tags.length; i++) {
     let tag = tags[i];
-    let promise = client.executeAsync('SELECT * FROM videos_by_tag WHERE tag = ? LIMIT ?', [ tag, pageSize ]);
+    let promise = client.executeAsync('SELECT * FROM killrvideo.videos_by_tag WHERE tag = ? LIMIT ?', [ tag, pageSize ]);
     inFlight.push(promise);
 
     // If we don't have at least three in-flight queries and this isn't the last tag, keep kicking off queries

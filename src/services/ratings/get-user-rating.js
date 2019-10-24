@@ -16,7 +16,7 @@ export function getUserRating(call, cb) {
         toCassandraUuid(request.videoId),
         toCassandraUuid(request.userId) 
       ];
-      client.execute('SELECT rating FROM video_ratings_by_user WHERE videoid = ? AND userid = ?', queryParams, next);
+      client.execute('SELECT rating FROM killrvideo.video_ratings_by_user WHERE videoid = ? AND userid = ?', queryParams, next);
     },
     (resultSet, next) => {
       // Init to 0 in case user hasn't rated video yet

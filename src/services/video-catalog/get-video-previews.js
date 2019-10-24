@@ -21,7 +21,7 @@ export function getVideoPreviews(call, cb) {
     return request.videoIds.map(id => {
       let videoId = toCassandraUuid(id);
       return client.executeAsync(
-        'SELECT videoid, userid, added_date, name, preview_image_location FROM videos WHERE videoid = ?', [ videoId ]);
+        'SELECT videoid, userid, added_date, name, preview_image_location FROM killrvideo.videos WHERE videoid = ?', [ videoId ]);
     });
   })
   .all()

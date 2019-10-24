@@ -9,17 +9,17 @@ import { YouTubeVideoAdded } from './events';
 import { LATEST_VIDEOS_MAX_DAYS } from './constants';
 
 const videosCql = `
-INSERT INTO videos (
+INSERT INTO killrvideo.videos (
   videoid, userid, name, description, location, preview_image_location, tags, added_date, location_type) 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 const userVideosCql = `
-INSERT INTO user_videos (
+INSERT INTO killrvideo.user_videos (
   userid, added_date, videoid, name, preview_image_location) 
 VALUES (?, ?, ?, ?, ?)`;
 
 const latestVideosCql = `
-INSERT INTO latest_videos (
+INSERT INTO killrvideo.latest_videos (
   yyyymmdd, added_date, videoid, userid, name, preview_image_location) 
 VALUES (?, ?, ?, ?, ?, ?) 
 USING TTL ?`;

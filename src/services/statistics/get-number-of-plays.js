@@ -28,7 +28,7 @@ export function getNumberOfPlays(call, cb) {
 
   // Run parallel queries on each video Id using the async library's map function
   async.map(videoIds, (videoId, done) => {
-    client.execute('SELECT views FROM video_playback_stats WHERE videoid = ?', [ videoId ], done);
+    client.execute('SELECT views FROM killrvideo.video_playback_stats WHERE videoid = ?', [ videoId ], done);
   },
   (err, resultSets) => {
     if (err) {

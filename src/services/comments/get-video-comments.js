@@ -22,11 +22,11 @@ async function getVideoCommentsImpl(call) {
   let query, queryParams;
   if (startingCommentId === null) {
     // No starting point so just get the latest comments overall
-    query = 'SELECT commentid, userid, comment, dateOf(commentid) AS comment_timestamp FROM comments_by_video WHERE videoid = ?';
+    query = 'SELECT commentid, userid, comment, dateOf(commentid) AS comment_timestamp FROM killrvideo.comments_by_video WHERE videoid = ?';
     queryParams = [ videoId ];
   } else {
     // Since commentId is a TimeUuid, we can get that comment and older comments given the starting commentId by using <=
-    query = 'SELECT commentid, userid, comment, dateOf(commentid) AS comment_timestamp FROM comments_by_video WHERE videoid = ? AND commentid <= ?';
+    query = 'SELECT commentid, userid, comment, dateOf(commentid) AS comment_timestamp FROM killrvideo.comments_by_video WHERE videoid = ? AND commentid <= ?';
     queryParams = [ videoId, startingCommentId ];
   }
 

@@ -25,7 +25,9 @@ export function createUser(call, cb) {
             passwordHash,
             toCassandraUuid(request.userId)
         ];
-        return client.executeAsync('/*INSERT QUERY HERE*/', insertParams);
+        return client.executeAsync(
+            'INSERT INTO killrvideo.user_credentials (email, password, userid) VALUES (?,?,?) IF NOT EXISTS',
+            insertParams);
     })
     .then(resultSet => {
         let row = resultSet.first();
@@ -51,7 +53,9 @@ export function createUser(call, cb) {
             request.email,
             createdDate
         ];
-        return client.executeAsync('/*INSERT QUERY HERE*/', insertParams, insertOpts).return(createdDate);
+        return client.executeAsync(
+            'INSERT INTO killrvideo.user_credentials (userid, firstname, lastname, email, created_date) VALUES (?,?,?,?,?) IF NOT EXISTS',
+            insertParams, insertOpts).return(createdDate);
     })
     .then(createdDate => {
         // Publish an event to tell the world about the new user

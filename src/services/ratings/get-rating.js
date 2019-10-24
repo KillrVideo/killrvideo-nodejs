@@ -12,7 +12,7 @@ export function getRating(call, cb) {
     async.asyncify(getCassandraClient),
     (client, next) => {
       let queryParams = [ toCassandraUuid(request.videoId) ];
-      client.execute('SELECT * FROM video_ratings WHERE videoid = ?', queryParams, next);
+      client.execute('SELECT * FROM killrvideo.video_ratings WHERE videoid = ?', queryParams, next);
     },
     (resultSet, next) => {
       // Init to 0 in case we don't have any stats yet for the requested video

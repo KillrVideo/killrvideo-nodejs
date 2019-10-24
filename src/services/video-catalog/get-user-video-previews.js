@@ -17,11 +17,11 @@ export function getUserVideoPreviews(call, cb) {
     let query, queryParams;
     if (startingVideoId === null) {
       // Just get the latest overall for the given user id
-      query = 'SELECT * FROM user_videos WHERE userid = ?';
+      query = 'SELECT * FROM killrvideo.user_videos WHERE userid = ?';
       queryParams = [ userId ];
     } else {
       // Get the latest starting from the point specified for the given user and going back in time
-      query = 'SELECT * FROM user_videos WHERE userid = ? AND (added_date, videoid) <= (?, ?)';
+      query = 'SELECT * FROM killrvideo.user_videos WHERE userid = ? AND (added_date, videoid) <= (?, ?)';
       queryParams = [ userId, startingAddedDate, startingVideoId ];
     }
 

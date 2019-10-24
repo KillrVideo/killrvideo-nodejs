@@ -15,7 +15,7 @@ export function recordPlaybackStarted(call, cb) {
     // Update the playback stats
     (client, next) => {
       let videoId = toCassandraUuid(request.videoId);
-      client.execute('UPDATE video_playback_stats SET views = views + 1 WHERE videoid = ?', [ videoId ], next);
+      client.execute('UPDATE killrvideo.video_playback_stats SET views = views + 1 WHERE videoid = ?', [ videoId ], next);
     },
 
     // Return the response

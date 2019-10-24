@@ -29,11 +29,11 @@ export function submitUploadedVideo(call, cb) {
     // Create the queries we're going to run in a batch (here, we're storing only the data we know now at submit time)
     let queries = [
       {
-        query: 'INSERT INTO videos (videoid, userid, name, description, tags, location_type, added_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        query: 'INSERT INTO killrvideo.videos (videoid, userid, name, description, tags, location_type, added_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
         params: [ videoId, userId, request.name, request.description, request.tags, VideoLocationType.UPLOAD, addedDate ]
       },
       {
-        query: 'INSERT INTO user_videos (userid, added_date, videoid, name) VALUES (?, ?, ?, ?)',
+        query: 'INSERT INTO killrvideo.user_videos (userid, added_date, videoid, name) VALUES (?, ?, ?, ?)',
         params: [ userId, addedDate, videoId, request.name ]
       }
     ];

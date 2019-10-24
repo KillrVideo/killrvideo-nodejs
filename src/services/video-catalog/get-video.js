@@ -15,7 +15,7 @@ export function getVideo(call, cb) {
     let requestParams = [
       toCassandraUuid(request.videoId)
     ];
-    return client.executeAsync('SELECT * FROM videos WHERE videoid = ?', requestParams);
+    return client.executeAsync('SELECT * FROM killrvideo.videos WHERE videoid = ?', requestParams);
   })
   .then(resultSet => {
     let row = resultSet.first();

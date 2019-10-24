@@ -29,14 +29,14 @@ function updateSearchOnVideoAdded(event) {
   event.tags.forEach(tag => {
     // Videos by tag table
     queries.push({
-      query: 'INSERT INTO videos_by_tag (tag, videoid, added_date, userid, name, preview_image_location, tagged_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      query: 'INSERT INTO killrvideo.videos_by_tag (tag, videoid, added_date, userid, name, preview_image_location, tagged_date) VALUES (?, ?, ?, ?, ?, ?, ?)',
       params: [ tag, videoId, addedDate, userId, event.name, event.previewImageLocation, timestamp ]
     });
 
     // Tags by letter table
     let firstLetter = tag.substr(0, 1);
     queries.push({
-      query: 'INSERT INTO tags_by_letter (first_letter, tag) VALUES (?, ?)',
+      query: 'INSERT INTO killrvideo.tags_by_letter (first_letter, tag) VALUES (?, ?)',
       params: [ firstLetter, tag ]
     });
   });

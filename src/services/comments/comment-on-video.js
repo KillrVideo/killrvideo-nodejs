@@ -29,11 +29,11 @@ async function commentOnVideoImpl(call) {
   // Create an array of statement to execute as a batch
   let queries = [
     {
-      query: 'INSERT INTO comments_by_video (videoid, commentid, userid, comment) VALUES (?, ?, ?, ?)',
+      query: 'INSERT INTO killrvideo.comments_by_video (videoid, commentid, userid, comment) VALUES (?, ?, ?, ?)',
       params: [ videoId, commentId, userId, request.comment ]
     },
     {
-      query: 'INSERT INTO comments_by_user (userid, commentid, videoid, comment) VALUES (?, ?, ?, ?)',
+      query: 'INSERT INTO killrvideo.comments_by_user (userid, commentid, videoid, comment) VALUES (?, ?, ?, ?)',
       params: [ userId, commentId, videoId, request.comment ]
     }
   ];

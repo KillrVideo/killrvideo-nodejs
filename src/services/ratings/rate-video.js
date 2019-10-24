@@ -7,13 +7,13 @@ import { publish } from '../../common/message-bus';
 
 // Update the video_ratings counter table
 const updateRatingsCql = `
-UPDATE video_ratings 
+UPDATE killrvideo.video_ratings 
 SET rating_counter = rating_counter + 1, rating_total = rating_total + ? 
 WHERE videoid = ?`;
 
 // Insert rating for a user and specific video
 const insertUserRatingCql = `
-INSERT INTO video_ratings_by_user (
+INSERT INTO killrvideo.video_ratings_by_user (
   videoid, userid, rating) 
 VALUES (?, ?, ?)`;
 

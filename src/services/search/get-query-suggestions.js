@@ -30,7 +30,7 @@ async function getTagSuggestions(call) {
   // Do query that gets tags starting with the first letter of the query
   let client = getCassandraClient();
   let queryParams = [ firstLetter, request.query, request.pageSize ];
-  let resultSet = await client.executeAsync('SELECT tag FROM tags_by_letter WHERE first_letter = ? AND tag >= ? LIMIT ?', queryParams);
+  let resultSet = await client.executeAsync('SELECT tag FROM killrvideo.tags_by_letter WHERE first_letter = ? AND tag >= ? LIMIT ?', queryParams);
 
   // Convert results to response
   return new GetQuerySuggestionsResponse({

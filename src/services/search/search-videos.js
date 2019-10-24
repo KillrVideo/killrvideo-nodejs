@@ -46,7 +46,7 @@ async function searchVideosByTag(call) {
 
   // Do the query
   let client = getCassandraClient();
-  let resultSet = await client.executeAsync('SELECT * FROM videos_by_tag WHERE tag = ?', [ request.query ], queryOpts);
+  let resultSet = await client.executeAsync('SELECT * FROM killrvideo.videos_by_tag WHERE tag = ?', [ request.query ], queryOpts);
 
   // Convert the rows in the ResultSet to a response
   return new SearchVideosResponse({
@@ -81,7 +81,7 @@ async function searchVideosWithDseSearch(call) {
   // Do the query
   let client = getCassandraClient();
   let resultSet = await client.executeAsync(
-    'SELECT videoid, userid, name, preview_image_location, added_date FROM videos WHERE solr_query=?',
+    'SELECT videoid, userid, name, preview_image_location, added_date FROM killrvideo.videos WHERE solr_query=?',
     [ solrQuery ], queryOpts);
 
   // Convert the rows in the resultset to a response

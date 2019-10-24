@@ -106,8 +106,8 @@ export function getLatestVideoPreviews(call, cb) {
     // Run different select statements depending on whether we have a starting point in the list
     let hasStartingPoint = startingAddedDate !== null && startingVideoId !== null; 
     let cql = hasStartingPoint
-      ? 'SELECT * FROM latest_videos WHERE yyyymmdd = ? AND (added_date, videoid) <= (?, ?)'
-      : 'SELECT * FROM latest_videos WHERE yyyymmdd = ?';
+      ? 'SELECT * FROM killrvideo.latest_videos WHERE yyyymmdd = ? AND (added_date, videoid) <= (?, ?)'
+      : 'SELECT * FROM killrvideo.latest_videos WHERE yyyymmdd = ?';
 
     // Define a function for running a query
     function runQuery() {
