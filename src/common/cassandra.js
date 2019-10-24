@@ -20,7 +20,9 @@ import { logger } from './logging';
 function createClientAsync(keyspace, queryOptions) {
     let client = new Client({
         cloud: { secureConnectBundle: '/home/ubuntu/workspace/creds.zip' },
-        credentials: { username: 'KVUser', password: 'KVPassword' }
+        credentials: { username: 'KVUser', password: 'KVPassword' },
+        keyspace,
+        queryOptions 
     });
     return lookupServiceAsync('cassandra').then(() => { 
             Promise.promisifyAll(client) // This creates "Async" versions of methods that return promises
