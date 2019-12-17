@@ -29,7 +29,9 @@ after_success:
 - "[ \"$(git tag --sort=-v:refname | grep -P \"^\\d+.\\d+.\\d+$\" | head -n1)\" == \"$TRAVIS_TAG\" ] &&  { docker tag ${TRAVIS_COMMIT} killrvideo/killrvideo-nodejs:latest; docker push killrvideo/killrvideo-nodejs:latest; }"
 
 after_failure:
+- travis_fold start logs
 - docker-compose -f docker-compose.ci.yml logs dse-config backend
+- travis_fold end logs
 
 env:
   global:
