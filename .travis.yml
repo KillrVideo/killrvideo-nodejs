@@ -10,10 +10,12 @@ services:
 # Build the app and a docker image
 script:
 - travis_fold start docker_build
-- docker build -t ${TRAVIS_COMMIT} .
+- docker build -t ${TRAVIS_COMMIT} -t killrvideo-nodejs-local .
 - travis_fold end docker_build
 - travis_fold start docker_dependencies_up
 - docker-compose -f docker-compose.ci.yml up -d
+- sleep 300
+- docker-compose -f docker-compose.ci.yml logs dse-config 
 - travis_fold end docker_dependencies_up
 - docker run --network killrvideo-nodejs_default killrvideo/killrvideo-integration-tests
 
