@@ -1,0 +1,28 @@
+version: '3'
+services:
+  backend:
+    build: .
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - dse
+    env_file: ./killrvideo.env
+    environment:
+      NODE_ENV: development
+
+  dse:
+    image: datastax/dse-server:6.7.0
+    command: [ -s -g ]
+    env_file: ./killrvideo.env
+    environment:
+      DS_LICENSE: accept
+    cap_add:
+      - IPC_LOCK
+    ulimits:
+      memlock: -1
+
+  dse-config:
+    image: killrvideo/killrvideo-dse-config:3.0.0-rc1
+    env_file: ./killrvideo.env
+    depends_on:
+      - dse
