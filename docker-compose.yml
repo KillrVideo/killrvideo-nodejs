@@ -30,7 +30,7 @@ services:
 
   # Frontend
   web:
-    image: killrvideo/killrvideo-web:3.0.0-rc1
+    image: killrvideo/killrvideo-web:3
     env_file: ./killrvideo.env
     ports:
       - "3000:3000"
@@ -39,14 +39,14 @@ services:
 
   # DSE Configurator to setup DSE
   dse-config:
-    image: killrvideo/killrvideo-dse-config:3.0.0-rc1
+    image: killrvideo/killrvideo-dse-config:3
     env_file: ./killrvideo.env
     depends_on:
       - dse
 
   # Sample Data Generator
   generator:
-    image: killrvideo/killrvideo-generator:3.0.0-rc4
+    image: killrvideo/killrvideo-generator:3
     env_file: ./killrvideo.env
     depends_on:
       - dse
