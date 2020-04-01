@@ -20,7 +20,7 @@ services:
       memlock: -1
 
   dse-config:
-    image: killrvideo/killrvideo-dse-config:3.0.0-rc1
+    image: killrvideo/killrvideo-dse-config:3
     env_file: ./killrvideo.env
     depends_on:
       - dse
