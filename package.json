@@ -24,7 +24,7 @@
   "homepage": "https://killrvideo.github.io",
   "private": true,
   "dependencies": {
-    "async": "^2.5.0",
+    "async": "^3.2.2",
     "bluebird": "^3.5.1",
     "cassandra-driver": "^3.3.0",
     "convict": "^4.0.1",
